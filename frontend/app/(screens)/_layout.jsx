@@ -1,6 +1,6 @@
+import { Stack } from 'expo-router';
+import React from 'react';
 
-import React from 'react'
-import { Stack } from 'expo-router'
 
 export default function ScreensLayout() {
   return (
@@ -18,7 +18,23 @@ export default function ScreensLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="InfoScreen"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="RegisterScreen"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="LoginScreen"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="index"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="test"
         options={{ headerShown: false }}
       />
     </Stack>

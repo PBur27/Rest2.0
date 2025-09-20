@@ -1,7 +1,7 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 
-const HomeScreen = () => {
+export default function HomeScreen() {
   return (
     <View style={{ flex: 1, flexDirection: "column" }}>
       <View
