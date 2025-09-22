@@ -1,4 +1,4 @@
-
+import { styles } from "../styles/styles";
 import { router } from "expo-router";
 import { Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,8 +9,8 @@ export default function Index() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-primary">
-      <Image source={require('../../assets/images/logo.png')}/>
+    <SafeAreaView style={styles.container_center}>
+      <Image style={styles.logo_large} source={require('../../assets/images/logo.png')}/>
     </SafeAreaView>
   );
 }
