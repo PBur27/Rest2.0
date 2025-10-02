@@ -1,7 +1,7 @@
 
 import { StyleSheet } from 'react-native';
 
-const COLORS = {
+export const COLORS = {
   background: {
     primary: "#FBF1E6",
     secondary: "#8C7871",
@@ -10,6 +10,7 @@ const COLORS = {
   text: {
     primary: "#5B4B45",
     secondary: "#FBF1E6",
+    secondary_dim: "#DBD0C6",
   },
   exertion: {
     none: "#8C7871",
@@ -29,9 +30,41 @@ export const styles = StyleSheet.create({
 
 
   logo_large: {
-    width: "50%",
-    height: undefined,
+    width: 120,
+    maxWidth: "80%",
+    maxHeight: "80%",
     aspectRatio: 1,
     resizeMode: 'contain',
+  },
+  logo_small: {
+    width: 60,
+    maxHeight: "90%",
+    aspectRatio: 1,
+    resizeMode: 'contain',
+  },
+  battery_icon: {
+    width: 100,
+    maxHeight: "90%",
+    aspectRatio: 1,
+    resizeMode: 'contain',
+  },
+  top_bar: {
+    display: 'flex',
+    flex: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 25,
+    paddingTop: 5,
+    backgroundColor: background.primary,
+  },
+  tab_bar: {
+    backgroundColor: background.secondary,
+    color: text.secondary,
+  },
+  body_container: {
+    flex: 13,
+    backgroundColor: background.primary,
+    color: text.primary,
   },
 });

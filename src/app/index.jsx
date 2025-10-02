@@ -2,8 +2,8 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import { Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { anonymousLogin } from "../../firebase/firebaseAuth";
-import { useSetUid } from "../AuthContext";
+import { anonymousLogin } from "../firebase/firebaseAuth";
+import { useSetUid } from "./AuthContext";
 import { styles } from "../styles/styles";
 
 export default function Index() {
@@ -14,8 +14,7 @@ export default function Index() {
       try {
         const userId = await anonymousLogin();
         await setUid(userId);
-        await new Promise(r => setTimeout(r, 1000));
-        router.navigate("/(screens)/HomeScreen");
+        router.replace("/(screens)/HomeScreen");
       } catch (error) {
         console.error("Login failed:", error);
       }
@@ -27,7 +26,7 @@ export default function Index() {
     <SafeAreaView style={styles.container_center}>
       <Image
         style={styles.logo_large}
-        source={require("../../assets/images/logo.png")}
+        source={require("../assets/images/logo.png")}
       />
     </SafeAreaView>
   );

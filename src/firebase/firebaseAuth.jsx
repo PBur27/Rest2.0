@@ -1,7 +1,10 @@
-import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
+import { initializeAuth, signInAnonymously, onAuthStateChanged, getReactNativePersistence } from "firebase/auth";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { app } from "./firebase";
 
-const auth = getAuth(app);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
 
 export async function anonymousLogin() {
   try {
