@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "expo-router";
 import { View, Text, Button, Image } from "react-native";
+import { CustomText } from "../../components/CustomText";
 import { useUser } from "../AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "../../styles/styles";
 import BodyImage from "../../components/BodyImage";
+
 
 export default function HomeScreen() {
   const userId = useUser();
@@ -22,6 +24,9 @@ export default function HomeScreen() {
         />
 
       </View>
+      <CustomText>
+        Font
+      </CustomText>
       <View style={[styles.container_center, styles.body_container]}>
         <BodyImage />
       </View>

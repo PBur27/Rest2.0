@@ -10,6 +10,7 @@ export default function ScreensLayout() {
     <Tabs screenOptions={{
       headerShown: false,
       tabBarStyle: styles.tab_bar,
+      tabBarLabelStyle: styles.tab_bar_label,
       tabBarActiveTintColor: COLORS.text.secondary,
       tabBarInactiveTintColor: COLORS.text.secondary_dim,
     }}>

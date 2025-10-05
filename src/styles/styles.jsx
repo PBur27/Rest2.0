@@ -1,5 +1,4 @@
-
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const COLORS = {
   background: {
@@ -22,38 +21,56 @@ export const COLORS = {
 const { background, text, exertion } = COLORS;
 
 export const styles = StyleSheet.create({
-
-  container: { flex: 1, backgroundColor: background.primary, color: text.primary },
-  container_center: { flex: 1, backgroundColor: background.primary, color: text.primary, justifyContent: 'center', alignItems: 'center' },
-  container_secondary: { flex: 1, backgroundColor: background.secondary, color: text.secondary },
-  container_center_secondary: { flex: 1, backgroundColor: background.secondary, color: text.secondary, justifyContent: 'center', alignItems: 'center' },
-
+  container: {
+    flex: 1,
+    backgroundColor: background.primary,
+    color: text.primary,
+  },
+  container_center: {
+    flex: 1,
+    backgroundColor: background.primary,
+    color: text.primary,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container_secondary: {
+    flex: 1,
+    backgroundColor: background.secondary,
+    color: text.secondary,
+  },
+  container_center_secondary: {
+    flex: 1,
+    backgroundColor: background.secondary,
+    color: text.secondary,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
   logo_large: {
     width: 120,
     maxWidth: "80%",
     maxHeight: "80%",
     aspectRatio: 1,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   logo_small: {
     width: 60,
     maxHeight: "90%",
     aspectRatio: 1,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   battery_icon: {
     width: 100,
     maxHeight: "90%",
     aspectRatio: 1,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   top_bar: {
-    display: 'flex',
+    display: "flex",
     flex: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 25,
     paddingTop: 5,
     backgroundColor: background.primary,
@@ -62,9 +79,17 @@ export const styles = StyleSheet.create({
     backgroundColor: background.secondary,
     color: text.secondary,
   },
+  tab_bar_label: {
+    fontFamily: "Bayon_400Regular"
+  },
   body_container: {
     flex: 13,
     backgroundColor: background.primary,
     color: text.primary,
+  },
+  text: {
+    fontFamily: "Bayon_400Regular",
+    backgroundColor: background.primary,
+    color: text.primary
   },
 });
