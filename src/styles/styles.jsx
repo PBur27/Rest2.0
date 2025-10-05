@@ -53,18 +53,7 @@ export const styles = StyleSheet.create({
     aspectRatio: 1,
     resizeMode: "contain",
   },
-  logo_small: {
-    width: 60,
-    maxHeight: "90%",
-    aspectRatio: 1,
-    resizeMode: "contain",
-  },
-  battery_icon: {
-    width: 100,
-    maxHeight: "90%",
-    aspectRatio: 1,
-    resizeMode: "contain",
-  },
+  
   top_bar: {
     display: "flex",
     flex: 2,
@@ -82,7 +71,7 @@ export const styles = StyleSheet.create({
   tab_bar_label: {
     fontFamily: "Bayon_400Regular"
   },
-  body_container: {
+  middle_container: {
     flex: 13,
     backgroundColor: background.primary,
     color: text.primary,

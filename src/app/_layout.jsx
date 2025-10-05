@@ -23,7 +23,6 @@ export default function RootLayout() {
   }
   return (
     <AuthProvider>
-
       <Stack
         screenOptions={{
           headerShown: false
@@ -58,7 +57,6 @@ export default function RootLayout() {
           }}
         />
       </Stack>
-
     </AuthProvider>
   );
 }

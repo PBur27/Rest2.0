@@ -1,19 +1,28 @@
-import { initializeAuth, signInAnonymously, onAuthStateChanged, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import { app } from "./firebase";
+import { getReactNativePersistence, initializeAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 import { Platform } from "react-native";
+import { app } from "./firebase";
 
+// Declare auth variable in the module scope
+let auth;
+
+// Initialize auth based on platform
 if (Platform.OS !== 'web') {
   // Initialize Firebase Auth with React Native persistence
-  const auth = initializeAuth(app, {
+  auth = initializeAuth(app, {
     persistence: getReactNativePersistence(ReactNativeAsyncStorage)
   });
 } else {
   // For web, use default initialization
-  const auth = initializeAuth(app);
+  auth = initializeAuth(app);
 }
 
+
 export async function anonymousLogin() {
+  if (!auth) {
+    throw new Error('Firebase Auth is not initialized');
+  }
+
   try {
     await signInAnonymously(auth); // wait for sign-in to complete
 
@@ -22,13 +31,18 @@ export async function anonymousLogin() {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
           resolve(user.uid); // resolve with UID
+          unsubscribe(); // stop listening after successful auth
         } else {
           reject(new Error("No user found"));
+          unsubscribe(); // stop listening after failure
         }
-        unsubscribe(); // stop listening after first event
-      }, reject);
+      }, (error) => {
+        reject(error);
+        unsubscribe(); // stop listening after error
+      });
     });
   } catch (error) {
-    console.error(error.code, error.message);
+    console.error('Anonymous login error:', error.code, error.message);
+    throw error; // Re-throw the error to be handled by the caller
   }
 }

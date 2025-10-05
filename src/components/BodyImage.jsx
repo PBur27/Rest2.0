@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { BodyParts } from './BodyParts';
 import { styles } from "../styles/styles";
 
-const BodyImage = () => {
+export default function BodyImage() {
 
   const [organism, setOrganism] = useState({
     front: {
@@ -50,5 +50,3 @@ const BodyImage = () => {
     </View>
   );
 }
-
-export default BodyImage
