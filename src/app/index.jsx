@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import { Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { anonymousLogin } from "../firebase/firebaseAuth";
-import { useSetUid } from "./AuthContext";
 import { styles } from "../styles/styles";
+import { useSetUid } from "./AuthContext";
 
 export default function Index() {
   const setUid = useSetUid();
@@ -14,7 +14,7 @@ export default function Index() {
       try {
         const userId = await anonymousLogin();
         await setUid(userId);
-        router.replace("/(screens)/HomeScreen");
+        router.replace("/(tabs)/HomeScreen");
       } catch (error) {
         console.error("Login failed:", error);
       }

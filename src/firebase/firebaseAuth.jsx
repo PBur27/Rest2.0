@@ -1,10 +1,17 @@
 import { initializeAuth, signInAnonymously, onAuthStateChanged, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { app } from "./firebase";
+import { Platform } from "react-native";
 
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-});
+if (Platform.OS !== 'web') {
+  // Initialize Firebase Auth with React Native persistence
+  const auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+  });
+} else {
+  // For web, use default initialization
+  const auth = initializeAuth(app);
+}
 
 export async function anonymousLogin() {
   try {
