@@ -14,7 +14,7 @@ export default function ActivityPicker({ activity, setActivity }) {
         <CustomText style={{ fontSize: 24, color: "#FBF1E6", backgroundColor: "transparent" }}>Workout</CustomText>
       </TouchableOpacity>
       <TouchableOpacity style={activity === "sleep" ? styles.button_active : styles.button} onPress={() => setActivity("sleep")}>
-        <CustomText style={{ fontSize: 24, color: "#FBF1E6", backgroundColor: "transparent" }}>Sleep</CustomText>
+        <CustomText style={{ fontSize: 24, color: "#FBF1E6", backgroundColor: "transparent", alignItems: "center" }}>Sleep</CustomText>
       </TouchableOpacity>
     </View>
   )
@@ -25,20 +25,22 @@ const styles = StyleSheet.create({
     flex: 2,
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 10,
+    marginHorizontal: 10,
   },
   button: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    marginHorizontal: 20,
     backgroundColor: "#8C7871",
     borderRadius: 10,
   },
   button_active: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    marginHorizontal: 20,
     backgroundColor: "#8C7871",
     borderRadius: 10,
     backgroundColor: "#5B4B45",
