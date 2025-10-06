@@ -41,7 +41,7 @@ export default function ActivityScreen() {
             <ActivityDateTime onChangeDate={handleDateChange} onChangeTime={handleTimeChange} />
           </View>
           <View style={{ flex: 5 }}>
-            <ActivityEntries>
+            <ActivityEntries activity={activity} date={date} time={time} >
 
             </ActivityEntries>
           </View>
