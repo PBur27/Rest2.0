@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Modal, TouchableWithoutFeedback, TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Modal, TouchableWithoutFeedback, TouchableOpacity, FlatList, TextInput } from 'react-native'
 import { Picker } from '@react-native-picker/picker';
 import { useState } from 'react';
 import CustomText from './CustomText'
@@ -209,7 +209,16 @@ export default function AddEntryModal({ isVisible, onClose }) {
         { id: '200', name: 'Kettlebell Jump Squat' },
     ];
 
+    const [text, setText] = useState("");
+    const [exercisesFromInput, setExercisesFromInput] = useState(exercises);
 
+    const searchExercises = (input) => {
+        setText(input);
+        const filteredExercises = exercises.filter(exercise =>
+            exercise.name.toLowerCase().includes(input.toLowerCase())
+        );
+        setExercisesFromInput(filteredExercises);
+    };
 
     const [selectedNumber, setSelectedNumber] = useState();
 
@@ -229,31 +238,41 @@ export default function AddEntryModal({ isVisible, onClose }) {
                     <View style={styles.modalContent}>
                         <View style={styles.container}>
                             <CustomText style={styles.title}>ADD ENTRY</CustomText>
-                            <View style={styles.row}>
-                                <FlatList
-                                    data={exercises}
-                                    keyExtractor={(item) => item.id}
-                                    renderItem={({ item }) => (
-                                        <TouchableOpacity>
-                                            <CustomText style={styles.exerciseText}>{item.name}</CustomText>
-                                        </TouchableOpacity>
-                                    )}
-                                />
-
-                                <View style={styles.pickerSection}>
-                                    <CustomText style={styles.exerciseText}>Intensity</CustomText>
-                                    <View>
-                                        <Picker
-                                            selectedValue={selectedNumber}
-                                            onValueChange={(itemValue) => setSelectedNumber(itemValue)}
-                                            style={styles.picker}
-                                        >
-                                            {[...Array(10)].map((_, i) => (
-                                                <Picker.Item key={i + 1} label={`${i + 1}`} value={i + 1} />
-                                            ))}
-                                        </Picker>
+                            <View style={{ flex: 1 }}>
+                                <View style={styles.row}>
+                                    <View style={styles.topContainer}>
+                                        <TextInput onChangeText={searchExercises} value={text} placeholderTextColor='#FBF1E6' placeholder='Search' style={styles.topText} />
                                     </View>
-                                    
+                                    <View style={styles.topContainer}>
+                                        <CustomText style={styles.topText}>Intensity</CustomText>
+                                    </View>
+
+                                </View>
+
+                                <View style={[styles.row, { flex: 3 }]}>
+                                    <FlatList
+                                        data={exercisesFromInput}
+                                        style={{ flex: 1 }}
+                                        keyExtractor={(item) => item.id}
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity>
+                                                <CustomText style={styles.exerciseText}>{item.name}</CustomText>
+                                            </TouchableOpacity>
+                                        )}
+                                    />
+                                    <View style={styles.pickerSection}>
+                                        <View>
+                                            <Picker
+                                                selectedValue={selectedNumber}
+                                                onValueChange={(itemValue) => setSelectedNumber(itemValue)}
+                                                style={styles.picker}
+                                            >
+                                                {[...Array(10)].map((_, i) => (
+                                                    <Picker.Item key={i + 1} label={`${i + 1}`} value={i + 1} style={{ fontSize: 20, fontFamily: "Bayon_400Regular" }} />
+                                                ))}
+                                            </Picker>
+                                        </View>
+                                    </View>
                                 </View>
                             </View>
                             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
@@ -277,14 +296,14 @@ const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: "#FBF1E6",
         height: "60%",
-        width: "90%",
+        width: "95%",
         borderRadius: 10,
     },
     container: {
         flex: 1,
         justifyContent: "space-between",
         alignItems: "center",
-        padding: 20,
+        paddingVertical: 20,
         borderRadius: 10,
     },
     title: {
@@ -306,28 +325,41 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     row: {
-        gap: 100,
-        height: "60%",
+        flex: 1,
+        gap: 20,
+        justifyContent: "center",
         flexDirection: "row",
     },
     exerciseText: {
+        textAlign: "center",
         fontSize: 20,
         color: "#5B4B45",
-        padding: 5,
-    },
-    label: {
-        fontSize: 18,
-        fontWeight: "600",
-        marginBottom: 10,
     },
     pickerSection: {
+        flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        flex: 1,
     },
     picker: {
         height: 60,
         width: 80,
         color: "#5B4B45",
     },
+    topText: {
+        justifyContent: "center",
+        textAlign: "center",
+        fontFamily: "Bayon_400Regular",
+        fontSize: 24,
+        color: '#FBF1E6',
+        backgroundColor: '#5B4B45',
+    },
+    topContainer: {
+        width: 120,
+        height: "100%",
+        backgroundColor: '#5B4B45',
+        borderRadius: 10,
+        overflow: 'hidden',
+        justifyContent: 'center',
+
+    }
 })
