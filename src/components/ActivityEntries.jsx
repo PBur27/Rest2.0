@@ -13,7 +13,7 @@ export default function ActivityEntries({ activity, date, time }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={addEntry}>
-        <Ionicons name="add" size={100} color="#FBF1E6" />
+        <Ionicons name="add" size={80} color="#FBF1E6" />
       </TouchableOpacity>
       <AddEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} />
     </View>
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     backgroundColor: "#913737",
     width: "80%",
-    height: 100,
+    height: 80,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
