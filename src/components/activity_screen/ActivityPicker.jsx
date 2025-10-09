@@ -3,7 +3,7 @@ import CustomText from '../CustomText';
 
 export default function ActivityPicker({ activity, setActivity }) {
   
-
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity style={activity === "meal" ? styles.button_active : styles.button} onPress={() => setActivity("meal")}>

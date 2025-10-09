@@ -6,7 +6,9 @@ import {
   View,
 } from "react-native";
 
-export default function AddEntryModal({ isVisible, onClose }) {
+import ExerciseEntry from "./ExerciseEntry";
+
+export default function AddEntryModal({ isVisible, onClose, activity, date, time }) {
   const exercises = [
     { id: "1", name: "Push Ups" },
     { id: "2", name: "Squats" },
@@ -32,10 +34,18 @@ export default function AddEntryModal({ isVisible, onClose }) {
         activeOpacity={1}
         onPressOut={onClose} // close on background press
       >
-        <TouchableWithoutFeedback onPress={() => {}}>
+        <TouchableWithoutFeedback onPress={() => { }}>
           <View style={styles.modalContent}>
-            <View style={{ flex: 1, margin:10 }}>
-
+            <View style={{ flex: 1, margin: 10 }}>
+              {activity === "workout" && (
+                <ExerciseEntry date={date} time={time} />
+              )}
+              {activity === "diet" && (
+                <ExerciseEntry date={date} time={time} />
+              )}
+              {activity === "sleep" && (
+                <ExerciseEntry date={date} time={time} />
+              )}
 
 
             </View>

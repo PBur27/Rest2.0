@@ -1,14 +1,21 @@
-import React from 'react';
-import { Text } from 'react-native';
-import { styles } from '../styles/styles';
+import { StyleSheet, Text } from "react-native";
 
-export default function CustomText({ style, children, fontSize = 14, ...props }) {
+export default function CustomText({ children, ...props }) {
   return (
     <Text
-      style={[styles.text, { fontSize }, style]} // merge prop style
       {...props}
+      style={[styles.text, props.style]} // allow overrides
     >
       {children}
     </Text>
   );
-};
+}
+
+const styles = StyleSheet.create({
+  text: {
+    textAlign: "center",
+    fontFamily: "Bayon_400Regular",
+    backgroundColor: "#FBF1E6",
+    color: "#8C7871",
+  },
+});

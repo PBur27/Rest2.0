@@ -14,7 +14,7 @@ export default function ActivityEntries({ activity, date, time }) {
       <TouchableOpacity style={styles.button} onPress={addEntry}>
         <Ionicons name="add" size={80} color="#FBF1E6" />
       </TouchableOpacity>
-      <AddEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} />
+      <AddEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} activity={activity} date={date} time={time} />
     </View>
   )
 }

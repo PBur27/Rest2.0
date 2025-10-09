@@ -4,7 +4,7 @@ import CustomText from '../CustomText'
 import { TextInput } from 'react-native-web'
 import { Ionicons } from '@expo/vector-icons'
 
-export default function ExerciseEntry() {
+export default function ExerciseEntry( date, time ) {
 
     const [search, setSearch] = useState("")
 
