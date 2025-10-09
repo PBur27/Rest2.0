@@ -1,6 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { useState } from 'react';
-import CustomText from './CustomText'
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import CustomText from '../CustomText';
 
 export default function ActivityPicker({ activity, setActivity }) {
   

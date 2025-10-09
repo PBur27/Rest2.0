@@ -1,8 +1,8 @@
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import CustomText from './CustomText';
+import { useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import CustomText from '../CustomText';
 
 export default function ActivityDateTime({ onChangeDate, onChangeTime }) {
   const [date, setDate] = useState(new Date());

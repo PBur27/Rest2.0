@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
-import { View, Text, Image } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { styles } from "../../styles/styles";
-import { useUser } from '../AuthContext'
-import ActivityPicker from '../../components/ActivityPicker';
-import CustomText from '../../components/CustomText'
+import { useState } from 'react';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import ActivityDateTime from '../../components/activity_screen/ActivityDateTime';
+import ActivityEntries from '../../components/activity_screen/ActivityEntries';
+import ActivityPicker from '../../components/activity_screen/ActivityPicker';
+import CustomText from '../../components/CustomText';
 import SmallLogo from '../../components/SmallLogo';
-import ActivityDateTime from '../../components/ActivityDateTime';
-import ActivityEntries from '../../components/ActivityEntries';
+import { styles } from "../../styles/styles";
 
 
 export default function ActivityScreen() {
