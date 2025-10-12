@@ -9,18 +9,6 @@ import {
 import ExerciseEntry from "./ExerciseEntry";
 
 export default function AddEntryModal({ isVisible, onClose, activity, date, time }) {
-  const exercises = [
-    { id: "1", name: "Push Ups" },
-    { id: "2", name: "Squats" },
-    { id: "3", name: "Burpees" },
-    { id: "4", name: "Plank" },
-    { id: "5", name: "Jumping Jacks" },
-    { id: "6", name: "Lunges" },
-    { id: "7", name: "Crunches" },
-    { id: "8", name: "Mountain Climbers" },
-    { id: "9", name: "Pull Ups" },
-    { id: "10", name: "Chin Ups" },
-  ];
 
   return (
     <Modal
@@ -41,10 +29,10 @@ export default function AddEntryModal({ isVisible, onClose, activity, date, time
                 <ExerciseEntry date={date} time={time} />
               )}
               {activity === "diet" && (
-                <ExerciseEntry date={date} time={time} />
+                <DietEntry date={date} time={time} />
               )}
               {activity === "sleep" && (
-                <ExerciseEntry date={date} time={time} />
+                <Entry date={date} time={time} />
               )}
 
 
