@@ -24,7 +24,6 @@ export default function AddEntryModal({ isVisible, onClose, activity, date, time
       >
         <TouchableWithoutFeedback onPress={() => { }}>
           <View style={styles.modalContent}>
-            <View style={{ flex: 1, margin: 10 }}>
               {activity === "workout" && (
                 <ExerciseEntry date={date} time={time} />
               )}
@@ -34,9 +33,6 @@ export default function AddEntryModal({ isVisible, onClose, activity, date, time
               {activity === "sleep" && (
                 <Entry date={date} time={time} />
               )}
-
-
-            </View>
           </View>
         </TouchableWithoutFeedback>
       </TouchableOpacity>
@@ -47,7 +43,7 @@ export default function AddEntryModal({ isVisible, onClose, activity, date, time
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "#00000060",
+    backgroundColor: "#00000053",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -55,7 +51,6 @@ const styles = StyleSheet.create({
     width: "90%",
     height: "70%",
     backgroundColor: "#FBF1E6",
-    opacity: "100%",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
