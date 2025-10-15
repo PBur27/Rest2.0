@@ -6,13 +6,13 @@ export default function ActivityPicker({ activity, setActivity }) {
   
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={activity === "diet" ? styles.button_active : styles.button} onPress={() => setActivity("diet")}>
+      <TouchableOpacity style={activity === "diet" ? styles.button_active : styles.button} onPress={() => setActivity("workout")}>
         <CustomText style={{ fontSize: 32, color: "#FBF1E6", backgroundColor: "transparent" }} >Meal</CustomText>
       </TouchableOpacity>
       <TouchableOpacity style={activity === "workout" ? styles.button_active : styles.button} onPress={() => setActivity("workout")}>
         <CustomText style={{ fontSize: 32, color: "#FBF1E6", backgroundColor: "transparent" }}>Workout</CustomText>
       </TouchableOpacity>
-      <TouchableOpacity style={activity === "sleep" ? styles.button_active : styles.button} onPress={() => setActivity("sleep")}>
+      <TouchableOpacity style={activity === "sleep" ? styles.button_active : styles.button} onPress={() => setActivity("workout")}>
         <CustomText style={{ fontSize: 32, color: "#FBF1E6", backgroundColor: "transparent", alignItems: "center" }}>Sleep</CustomText>
       </TouchableOpacity>
     </View>
