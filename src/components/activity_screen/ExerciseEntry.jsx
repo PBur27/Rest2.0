@@ -3,7 +3,7 @@ import { useState } from 'react'
 import CustomText from '../CustomText'
 import { Ionicons } from '@expo/vector-icons'
 
-export default function ExerciseEntry(date, time) {
+export default function ExerciseEntry({ setData, closeModal }) {
 
   const baseExercises = [
     { id: "1", name: "Push Ups" },
@@ -34,7 +34,8 @@ export default function ExerciseEntry(date, time) {
     { id: "26", name: "Jump Squats" },
   ];
   const [exercises, setExercises] = useState(baseExercises);
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("select exercise")
+  const [intensity, setIntensity] = useState(5);
   const handleSearch = (text) => {
     setExercises(baseExercises.filter(exercise => exercise.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())));
   }
@@ -42,12 +43,32 @@ export default function ExerciseEntry(date, time) {
     setSearch(item.name);
   }
   const saveEntry = () => {
-    console.log(search);
-    //logic tobeeadded
-  }
+    if (!search.trim()) {
+      alert("Please select an exercise before saving.");
+      return;
+    }
+
+    if (isNaN(intensity) || intensity < 1 || intensity > 10) {
+      alert("Intensity must be a number between 1 and 10.");
+      return;
+    }
+    const newEntry = {
+      id: Date.now().toString(),
+      name: search,
+      intensity: intensity,
+    };
+
+    setData((prev) => ({
+      ...prev,
+      data: [...prev.data, newEntry],
+    }));
+
+    closeModal();
+  };
+
   return (
     <View style={styles.container}>
-      <CustomText style={{ flex: 1, fontSize: 30 }}>ADD ENTRY</CustomText>
+      <CustomText style={{ flex: 1, fontSize: 24 }}>ADD ENTRY</CustomText>
       <View style={styles.searchContainer}>
         <TextInput style={styles.searchInput} placeholder='search...' placeholderTextColor={"#FBF1E6"} onChangeText={handleSearch} />
       </View>
@@ -68,7 +89,7 @@ export default function ExerciseEntry(date, time) {
         </View>
         <View style={{ flex: 1 }}>
           <CustomText style={styles.choiceLabel}>Intensity</CustomText>
-          <TextInput style={[styles.choiceText, { padding: 0 }]} defaultValue="5" maxLength={2} selectTextOnFocus={true} textAlign='center' keyboardType='numeric' placeholderTextColor={"#FBF1E6"} />
+          <TextInput style={[styles.choiceText, { padding: 0 }]} placeholder='1-10' maxLength={2} selectTextOnFocus={true} textAlign='center' keyboardType='numeric' placeholderTextColor={"#FBF1E6"} onChangeText={text => setIntensity(Number(text))} />
         </View>
 
       </View>
@@ -95,13 +116,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 40,
     marginBottom: 10,
-    height: 80,
   },
 
   searchInput: {
-    flex: 3,
+    flex: 1,
     color: "#FBF1E6",
-    fontSize: 24,
+    textAlignVertical: "center",
+    fontSize: 10,
     fontFamily: "Bayon_400Regular",
   },
   //layout to be fixed on web
@@ -116,19 +137,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginVertical: 10,
-    padding: 10,
+    paddingHorizontal: 10,
     paddingBottom: 0,
     backgroundColor: "#5B4B45",
     borderRadius: 10,
   },
   choiceText: {
     fontFamily: "Bayon_400Regular",
-    fontSize: 20,
+    fontSize: 16,
     color: "#FBF1E6",
     backgroundColor: "#5B4B45",
   },
   choiceLabel: {
-    fontSize: 10,
+    height:10,
+    fontSize: 8,
     color: "#8c7871",
     backgroundColor: "#5B4B45",
   },

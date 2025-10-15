@@ -4,27 +4,9 @@ import { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import CustomText from '../CustomText';
 
-export default function ActivityDateTime({ onChangeDate, onChangeTime }) {
-  const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date());
+export default function ActivityDateTime({ date, time, setDate, setTime }) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
-
-  const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      setDate(selectedDate);
-      onChangeDate?.(selectedDate);
-    }
-  };
-
-  const handleTimeChange = (event, selectedTime) => {
-    setShowTimePicker(false);
-    if (selectedTime) {
-      setTime(selectedTime);
-      onChangeTime?.(selectedTime);
-    }
-  };
 
   return (
     <View style={styles.row}>
@@ -47,11 +29,12 @@ export default function ActivityDateTime({ onChangeDate, onChangeTime }) {
       </TouchableOpacity>
 
       {showDatePicker && (
-        <RNDateTimePicker value={date} maximumDate={new Date()} onChange={handleDateChange} />
+        <RNDateTimePicker value={new Date()} maximumDate={new Date()} onChange={(event, date) => { setDate(date); setShowDatePicker(false) }} />
       )}
 
+
       {showTimePicker && (
-        <RNDateTimePicker value={time} mode="time" onChange={handleTimeChange} />
+        <RNDateTimePicker value={new Date()} mode="time" onChange={(event, date) => { setTime(date); setShowTimePicker(false) }} />
       )}
     </View>
   );

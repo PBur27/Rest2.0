@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ActivityDateTime from '../../components/activity_screen/ActivityDateTime';
@@ -14,17 +14,15 @@ export default function ActivityScreen() {
   const [activity, setActivity] = useState("workout");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
+  const [entryData, setEntryData] = useState({activity: activity, data: []});
 
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-    console.log(newDate);
-  };
+  const saveActivity = (activity, date, time, eentryData) => {
 
-  const handleTimeChange = (newTime) => {
-    setTime(newTime);
-    console.log(newTime);
-  };
+  }
 
+  useEffect(() => {
+    setEntryData({activity: activity, data: []});
+  }, [activity]);
   return (
     <SafeAreaView style={styles.container_secondary} edges={["top"]}>
       <View style={styles.top_bar}>
@@ -37,10 +35,10 @@ export default function ActivityScreen() {
         </View>
         <View style={{ flex: 6 }}>
           <View style={{ flex: 1 }}>
-            <ActivityDateTime onChangeDate={handleDateChange} onChangeTime={handleTimeChange} />
+            <ActivityDateTime date={date} time={time} setDate={setDate} setTime={setTime} />
           </View>
           <View style={{ flex: 5 }}>
-            <ActivityEntries activity={activity} date={date} time={time} >
+            <ActivityEntries activity={activity} entryData={entryData} setData={setEntryData} saveActivity={saveActivity}>
 
             </ActivityEntries>
           </View>
