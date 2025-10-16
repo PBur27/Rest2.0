@@ -3,35 +3,12 @@ import { useState } from 'react'
 import CustomText from '../CustomText'
 import { Ionicons } from '@expo/vector-icons'
 
-export default function ExerciseEntry({ setData, closeModal }) {
+export default function ExerciseEntry({ setEntryData, closeModal }) {
 
   const baseExercises = [
     { id: "1", name: "Push Ups" },
     { id: "2", name: "Squats" },
-    { id: "3", name: "Burpees" },
-    { id: "4", name: "Plank" },
-    { id: "5", name: "Jumping Jacks" },
-    { id: "6", name: "Lunges" },
-    { id: "7", name: "Crunches" },
-    { id: "8", name: "Mountain Climbers" },
     { id: "9", name: "Pull Ups" },
-    { id: "10", name: "Chin Ups" },
-    { id: "11", name: "Sit Ups" },
-    { id: "12", name: "High Knees" },
-    { id: "13", name: "Butt Kicks" },
-    { id: "14", name: "Tricep Dips" },
-    { id: "15", name: "Bicep Curls" },
-    { id: "16", name: "Shoulder Press" },
-    { id: "17", name: "Bench Press" },
-    { id: "18", name: "Deadlifts" },
-    { id: "19", name: "Bent Over Rows" },
-    { id: "20", name: "Leg Press" },
-    { id: "21", name: "Calf Raises" },
-    { id: "22", name: "Glute Bridges" },
-    { id: "23", name: "Russian Twists" },
-    { id: "24", name: "Side Plank" },
-    { id: "25", name: "Wall Sit" },
-    { id: "26", name: "Jump Squats" },
   ];
   const [exercises, setExercises] = useState(baseExercises);
   const [search, setSearch] = useState("select exercise")
@@ -58,11 +35,10 @@ export default function ExerciseEntry({ setData, closeModal }) {
       intensity: intensity,
     };
 
-    setData((prev) => ({
+    setEntryData(prev => ({
       ...prev,
       data: [...prev.data, newEntry],
     }));
-
     closeModal();
   };
 

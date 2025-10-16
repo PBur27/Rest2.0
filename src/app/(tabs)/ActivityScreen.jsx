@@ -7,6 +7,8 @@ import ActivityPicker from '../../components/activity_screen/ActivityPicker';
 import CustomText from '../../components/CustomText';
 import SmallLogo from '../../components/SmallLogo';
 import { styles } from "../../styles/styles";
+import { useUser } from '../AuthContext';
+import { logActivityToDatabase } from '../../firebase/firebase';
 
 
 export default function ActivityScreen() {
@@ -15,9 +17,11 @@ export default function ActivityScreen() {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [entryData, setEntryData] = useState({activity: activity, data: []});
+  const  userId = useUser()
 
-  const saveActivity = (activity, date, time, eentryData) => {
-
+  const saveActivity = () => {
+    logActivityToDatabase(userId,entryData)
+    setEntryData({activity: activity, data: []})
   }
 
   useEffect(() => {
@@ -38,7 +42,7 @@ export default function ActivityScreen() {
             <ActivityDateTime date={date} time={time} setDate={setDate} setTime={setTime} />
           </View>
           <View style={{ flex: 5 }}>
-            <ActivityEntries activity={activity} entryData={entryData} setData={setEntryData} saveActivity={saveActivity}>
+            <ActivityEntries activity={activity} entryData={entryData} setEntryData={setEntryData} saveActivity={saveActivity}>
 
             </ActivityEntries>
           </View>

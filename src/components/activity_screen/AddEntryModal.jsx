@@ -10,7 +10,7 @@ import ExerciseEntry from "./ExerciseEntry";
 import DietEntry from "./DietEntry";
 import SleepEntry from "./SleepEntry";
 
-export default function AddEntryModal({ isVisible, onClose, activity, setData }) {
+export default function AddEntryModal({ isVisible, onClose, activity, setEntryData }) {
 
   return (
     <Modal
@@ -27,13 +27,13 @@ export default function AddEntryModal({ isVisible, onClose, activity, setData })
         <TouchableWithoutFeedback onPress={() => { }}>
           <View style={styles.modalContent}>
               {activity === "workout" && (
-                <ExerciseEntry setData={setData} closeModal={onClose} />
+                <ExerciseEntry setEntryData={setEntryData} closeModal={onClose} />
               )}
               {activity === "diet" && (
-                <DietEntry setData={setData} closeModal={onClose} />
+                <DietEntry setEntryData={setEntryData} closeModal={onClose} />
               )}
               {activity === "sleep" && (
-                <SleepEntry setData={setData} closeModal={onClose} />
+                <SleepEntry setEntryData={setEntryData} closeModal={onClose} />
               )}
           </View>
         </TouchableWithoutFeedback>

@@ -1,14 +1,21 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View, Button } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View, Pressable } from 'react-native';
 import CustomText from '../CustomText';
 import AddEntryModal from './AddEntryModal';
 
-export default function ActivityEntries({ activity, entryData, setData, saveActivity }) {
+export default function ActivityEntries({ activity, entryData, setEntryData, saveActivity }) {
   const [modalVisible, setModalVisible] = React.useState(false);
   const addEntry = () => {
     setModalVisible(true);
   }
+  const handleDelete = (itemToDelete) => {
+    setEntryData(prev => ({
+      ...prev,
+      data: prev.data.filter(item => item !== itemToDelete)
+    }));
+  };
+
 
   return (
     <>
@@ -21,35 +28,36 @@ export default function ActivityEntries({ activity, entryData, setData, saveActi
           <FlatList
             data={entryData.data}
             renderItem={({ item }) => (
-              <View style={styles.entryRow}>
-                <CustomText style={styles.entryText}>{item.name}</CustomText>
-                <CustomText style={styles.entryText}>{item.intensity}</CustomText>
-              </View>
+              <Pressable onPress={() => handleDelete(item)}>
+                <View style={styles.entryRow}>
+                  <CustomText style={styles.entryText}>{item.name}</CustomText>
+                  <CustomText style={styles.entryText}>{item.intensity}</CustomText>
+                </View>
+              </Pressable>
             )}
           />
 
         </View>
         <View style={styles.buttonContainer}>
-          {entryData.data.length == 0 ? (
+          {(!entryData?.data || entryData.data.length === 0) ? (
             <TouchableOpacity style={styles.button} onPress={addEntry}>
               <Ionicons name="add" size={80} color="#FBF1E6" />
             </TouchableOpacity>
-          )
-            :
-            (
-              <>
-                <TouchableOpacity style={styles.button} onPress={addEntry}>
-                  <Ionicons name="add" size={80} color="#FBF1E6" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={saveActivity}>
-                  <Ionicons name="checkmark" size={80} color="#FBF1E6" />
-                </TouchableOpacity>
-              </>
-            )}
+          ) : (
+            <>
+              <TouchableOpacity style={styles.button} onPress={addEntry}>
+                <Ionicons name="add" size={80} color="#FBF1E6" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={saveActivity}>
+                <Ionicons name="checkmark" size={80} color="#FBF1E6" />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
 
+
       </View>
-      <AddEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} activity={activity} setData={setData} />
+      <AddEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} activity={activity} setEntryData={setEntryData} />
     </>
   )
 }
@@ -109,7 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     width: "80%",
-    gap:20,
+    gap: 20,
     marginVertical: 10
   }
 })
