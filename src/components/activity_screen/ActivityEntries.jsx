@@ -1,28 +1,67 @@
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View, Pressable } from 'react-native';
-import CustomText from '../CustomText';
-import AddEntryModal from './AddEntryModal';
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import {
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Pressable,
+} from "react-native";
+import CustomText from "../CustomText";
+import AddEntryModal from "./AddEntryModal";
 
-export default function ActivityEntries({ activity, entryData, setEntryData, saveActivity }) {
+export default function ActivityEntries({
+  activity,
+  entryData,
+  setEntryData,
+  saveActivity,
+}) {
   const [modalVisible, setModalVisible] = React.useState(false);
   const addEntry = () => {
     setModalVisible(true);
-  }
+  };
   const handleDelete = (itemToDelete) => {
-    setEntryData(prev => ({
+    setEntryData((prev) => ({
       ...prev,
-      data: prev.data.filter(item => item !== itemToDelete)
+      data: prev.data.filter((item) => item !== itemToDelete),
     }));
   };
 
+  let headerTextLeft, headerTextRight;
+
+  if (activity == "workout") {
+    headerTextLeft = "exercise";
+    headerTextRight = "intensity";
+  } else if (activity == "sleep") {
+    headerTextLeft = "bedtime";
+    headerTextRight = "hours of sleep";
+  } else {
+    headerTextLeft = "calories";
+    headerTextRight = "protein";
+  }
 
   return (
     <>
       <View style={styles.container}>
         <View style={styles.headerRow}>
-          <CustomText style={styles.headerText}>Exercise</CustomText>
-          <CustomText style={styles.headerText}>Intensity</CustomText>
+          <CustomText
+            style={
+              entryData.data.length === 0
+                ? [styles.headerText, { color: "#FBF1E6" }]
+                : styles.headerText
+            }
+          >
+            {headerTextLeft}
+          </CustomText>
+          <CustomText
+            style={
+              entryData.data.length === 0
+                ? [styles.headerText, { color: "#FBF1E6" }]
+                : styles.headerText
+            }
+          >
+            {headerTextRight}
+          </CustomText>
         </View>
         <View style={styles.listContainer}>
           <FlatList
@@ -31,15 +70,16 @@ export default function ActivityEntries({ activity, entryData, setEntryData, sav
               <Pressable onPress={() => handleDelete(item)}>
                 <View style={styles.entryRow}>
                   <CustomText style={styles.entryText}>{item.name}</CustomText>
-                  <CustomText style={styles.entryText}>{item.intensity}</CustomText>
+                  <CustomText style={styles.entryText}>
+                    {item.intensity}
+                  </CustomText>
                 </View>
               </Pressable>
             )}
           />
-
         </View>
         <View style={styles.buttonContainer}>
-          {(!entryData?.data || entryData.data.length === 0) ? (
+          {!entryData?.data || entryData.data.length === 0 ? (
             <TouchableOpacity style={styles.button} onPress={addEntry}>
               <Ionicons name="add" size={80} color="#FBF1E6" />
             </TouchableOpacity>
@@ -54,12 +94,15 @@ export default function ActivityEntries({ activity, entryData, setEntryData, sav
             </>
           )}
         </View>
-
-
       </View>
-      <AddEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} activity={activity} setEntryData={setEntryData} />
+      <AddEntryModal
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        activity={activity}
+        setEntryData={setEntryData}
+      />
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -91,12 +134,11 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 10,
-
   },
   listContainer: {
     flex: 19,
     width: "80%",
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
   },
   entryRow: {
     flex: 1,
@@ -106,7 +148,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#5B4B45",
     borderRadius: 5,
     padding: 5,
-    marginBottom: 5
+    marginBottom: 5,
   },
   entryText: {
     backgroundColor: "#5B4B45",
@@ -118,6 +160,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "80%",
     gap: 20,
-    marginVertical: 10
-  }
-})
+    marginVertical: 10,
+  },
+});

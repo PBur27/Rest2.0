@@ -15,7 +15,6 @@ export default function Index() {
         const userId = await anonymousLogin();
         await loginOrRegister(userId);
         await setUid(userId);
-        await fetchUserData(userId);
         router.replace("/(tabs)/HomeScreen");
       } catch (error) {
         console.error("Login failed:", error);

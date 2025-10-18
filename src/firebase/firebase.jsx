@@ -127,13 +127,9 @@ export async function fetchUserData(userId) {
   const days = {};
   const today = new Date();
   for (let i = 0; i < 7; i++) {
-    const d = new Date(today); // clone
-    d.setDate(today.getDate() - i);
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    const dayStr = `${y}-${m}-${dd}`; // local YYYY-MM-DD
-    days[dayStr] = {};
+    const day = new Date(today); // clone
+    day.setDate(today.getDate() - i);
+    days[day] = {};
   }
 
   const workoutData = workoutDocs.forEach((doc) => {

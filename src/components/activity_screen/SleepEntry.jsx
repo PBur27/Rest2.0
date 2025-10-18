@@ -1,39 +1,39 @@
 import { StyleSheet, TouchableOpacity, View, FlatList, TextInput } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CustomText from '../CustomText'
 import { Ionicons } from '@expo/vector-icons'
 
-export default function SleepEntry({ setData, closeModal }) {
+export default function SleepEntry({ setEntryData, closeModal }) {
 
-  const [search, setSearch] = useState("select exercise")
-  const [intensity, setIntensity] = useState(5);
-  const handleSearch = (text) => {
-    
-  }
-  const selectExercise = (item) => {
-    setSearch(item.name);
-  }
+
+  const [bedtime, setBedtime] = useState(new Date());
+  const [sleepHours, setSleepHours] = useState(0);
+  let bedtimeStateHasChanged = false;
+
+  useEffect(() => {
+    bedtimeStateHasChanged = true;
+  },[bedtime])
+
   const saveEntry = () => {
-    if (!search.trim()) {
-      alert("Please select an exercise before saving.");
+    if (bedtimeStateHasChanged==false) {
+      alert("Please enter a valid bedtime");
       return;
     }
 
-    if (isNaN(intensity) || intensity < 1 || intensity > 10) {
-      alert("Intensity must be a number between 1 and 10.");
+    if (sleepHours == 0) {
+      alert("Please enter a valid number of hours slept");
       return;
     }
     const newEntry = {
       id: Date.now().toString(),
-      name: search,
-      intensity: intensity,
+      bedtime: bedtime,
+      sleepHours: sleepHours,
     };
 
-    setData((prev) => ({
+    setEntryData(prev => ({
       ...prev,
-      data: [...prev.data, newEntry],
+      data: [newEntry],
     }));
-
     closeModal();
   };
 
