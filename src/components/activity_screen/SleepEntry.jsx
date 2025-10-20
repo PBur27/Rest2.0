@@ -1,21 +1,22 @@
-import { StyleSheet, TouchableOpacity, View, FlatList, TextInput } from 'react-native'
-import { useEffect, useState } from 'react'
-import CustomText from '../CustomText'
-import { Ionicons } from '@expo/vector-icons'
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
+import { useEffect, useState } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import CustomText from "../CustomText";
 
 export default function SleepEntry({ setEntryData, closeModal }) {
-
-
   const [bedtime, setBedtime] = useState(new Date());
   const [sleepHours, setSleepHours] = useState(0);
   let bedtimeStateHasChanged = false;
 
+  const [timePicker, showTimePicker] = useState(false);
+
   useEffect(() => {
     bedtimeStateHasChanged = true;
-  },[bedtime])
+  }, [bedtime]);
 
   const saveEntry = () => {
-    if (bedtimeStateHasChanged==false) {
+    if (bedtimeStateHasChanged == false) {
       alert("Please enter a valid bedtime");
       return;
     }
@@ -30,7 +31,7 @@ export default function SleepEntry({ setEntryData, closeModal }) {
       sleepHours: sleepHours,
     };
 
-    setEntryData(prev => ({
+    setEntryData((prev) => ({
       ...prev,
       data: [newEntry],
     }));
@@ -40,33 +41,50 @@ export default function SleepEntry({ setEntryData, closeModal }) {
   return (
     <View style={styles.container}>
       <CustomText style={{ flex: 1, fontSize: 24 }}>ADD ENTRY</CustomText>
-      <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder='search...' placeholderTextColor={"#FBF1E6"} onChangeText={handleSearch} />
-      </View>
       <View style={{ flex: 4 }}>
-        <FlatList
-          data={exercises}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.listItem} onPress={() => selectExercise(item)}>
-              <CustomText style={styles.listItemText}>{item.name}</CustomText>
-            </TouchableOpacity>
-          )}
-        />
+        <View style={[styles.choiceRow, { flex: 1 }]}>
+          <TouchableOpacity
+            style={{ flex: 2 }}
+            onPress={() => showTimePicker(true)}
+          >
+            <CustomText style={styles.choiceLabel}>Set Bedtime</CustomText>
+          </TouchableOpacity>
+          <View style={{ flex: 1 }}></View>
+        </View>
+        <View style={[styles.choiceRow, { flex: 1 }]}>
+          <TouchableOpacity style={{ flex: 2 }}>
+            <CustomText style={styles.choiceLabel}>Set Hours Slept</CustomText>
+          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <Picker
+            selectedValue={sleepHours}
+            onValueChange={(itemValue, itemIndex) => setSleepHours(itemValue)}
+          >
+            <Picker.Item label="J" value="java" />
+            <Picker.Item label="K" value="js" />
+          </Picker>
+          </View>
+        </View>
+        <View style={{ flex: 1 }}/>
       </View>
-      <View style={styles.choiceRow}>
-        <View style={{ flex: 2 }}>
-          <CustomText style={styles.choiceLabel}>Exercise</CustomText>
-          <CustomText style={styles.choiceText}>{search}</CustomText>
-        </View>
-        <View style={{ flex: 1 }}>
-          <CustomText style={styles.choiceLabel}>Intensity</CustomText>
-          <TextInput style={[styles.choiceText, { padding: 0 }]} placeholder='1-10' maxLength={2} selectTextOnFocus={true} textAlign='center' keyboardType='numeric' placeholderTextColor={"#FBF1E6"} onChangeText={text => setIntensity(Number(text))} />
-        </View>
+      <View style={{ flex: 1 }}></View>
+      <TouchableOpacity style={styles.saveButton} onPress={saveEntry}>
+        <CustomText style={styles.saveButtonText}>SAVE</CustomText>
+      </TouchableOpacity>
 
-      </View>
-      <TouchableOpacity style={styles.saveButton} onPress={saveEntry}><CustomText style={styles.saveButtonText}>SAVE</CustomText></TouchableOpacity>
+      {timePicker && (
+        <RNDateTimePicker
+          value={new Date()}
+          mode="time"
+          display="clock"
+          onChange={(date) => {
+            setBedtime(date);
+            showTimePicker(false);
+          }}
+        />
+      )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -78,52 +96,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#FBF1E6",
     color: "#8C7871",
   },
-  searchContainer: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "#8c7871",
-    color: "#FBF1E6",
-    borderRadius: 20,
-    justifyContent: "space-between",
-    paddingHorizontal: 40,
-    marginBottom: 10,
-  },
-
-  searchInput: {
-    flex: 1,
-    color: "#FBF1E6",
-    textAlignVertical: "center",
-    fontSize: 10,
-    fontFamily: "Bayon_400Regular",
-  },
-  //layout to be fixed on web
-  listItem: {
-    flex: 1,
-  },
-  listItemText: {
-    fontSize: 16,
-  },
   choiceRow: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     marginVertical: 10,
     paddingHorizontal: 10,
     paddingBottom: 0,
-    backgroundColor: "#5B4B45",
     borderRadius: 10,
   },
   choiceText: {
     fontFamily: "Bayon_400Regular",
     fontSize: 16,
-    color: "#FBF1E6",
-    backgroundColor: "#5B4B45",
   },
   choiceLabel: {
-    height:10,
-    fontSize: 8,
-    color: "#8c7871",
-    backgroundColor: "#5B4B45",
+    fontSize: 24,
   },
   saveButton: {
     flex: 1,
@@ -140,4 +127,4 @@ const styles = StyleSheet.create({
     color: "#FBF1E6",
     textAlign: "center",
   },
-})
+});
