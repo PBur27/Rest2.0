@@ -39,7 +39,7 @@ export default function ActivityScreen() {
         </View>
         <View style={{ flex: 6 }}>
           <View style={{ flex: 1 }}>
-            <ActivityDateTime date={date} time={time} setDate={setDate} setTime={setTime} />
+            <ActivityDateTime activity={entryData.activity} date={date} time={time} setDate={setDate} setTime={setTime} />
           </View>
           <View style={{ flex: 5 }}>
             <ActivityEntries activity={activity} entryData={entryData} setEntryData={setEntryData} saveActivity={saveActivity}>

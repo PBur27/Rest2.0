@@ -1,101 +1,116 @@
-import { StyleSheet, TouchableOpacity, View, FlatList, TextInput } from 'react-native'
-import { useState } from 'react'
-import CustomText from '../CustomText'
-import { Ionicons } from '@expo/vector-icons'
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { useState } from "react";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import CustomText from "../CustomText";
 
-export default function ExerciseEntry({ setData, closeModal }) {
+export default function DietEntry({ setEntryData, closeModal }) {
+  const [bedtime, setBedtime] = useState(new Date());
+  const [sleepHours, setSleepHours] = useState(6);
+  const [timePicker, showTimePicker] = useState(false);
 
-  const baseExercises = [
-    { id: "1", name: "Push Ups" },
-    { id: "2", name: "Squats" },
-    { id: "3", name: "Burpees" },
-    { id: "4", name: "Plank" },
-    { id: "5", name: "Jumping Jacks" },
-    { id: "6", name: "Lunges" },
-    { id: "7", name: "Crunches" },
-    { id: "8", name: "Mountain Climbers" },
-    { id: "9", name: "Pull Ups" },
-    { id: "10", name: "Chin Ups" },
-    { id: "11", name: "Sit Ups" },
-    { id: "12", name: "High Knees" },
-    { id: "13", name: "Butt Kicks" },
-    { id: "14", name: "Tricep Dips" },
-    { id: "15", name: "Bicep Curls" },
-    { id: "16", name: "Shoulder Press" },
-    { id: "17", name: "Bench Press" },
-    { id: "18", name: "Deadlifts" },
-    { id: "19", name: "Bent Over Rows" },
-    { id: "20", name: "Leg Press" },
-    { id: "21", name: "Calf Raises" },
-    { id: "22", name: "Glute Bridges" },
-    { id: "23", name: "Russian Twists" },
-    { id: "24", name: "Side Plank" },
-    { id: "25", name: "Wall Sit" },
-    { id: "26", name: "Jump Squats" },
-  ];
-  const [exercises, setExercises] = useState(baseExercises);
-  const [search, setSearch] = useState("select exercise")
-  const [intensity, setIntensity] = useState(5);
-  const handleSearch = (text) => {
-    setExercises(baseExercises.filter(exercise => exercise.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())));
-  }
-  const selectExercise = (item) => {
-    setSearch(item.name);
-  }
+  const formatTime = (date) => {
+    const h = date.getHours().toString().padStart(2, "0");
+    const m = date.getMinutes().toString().padStart(2, "0");
+    return `${h}:${m}`;
+  };
+
   const saveEntry = () => {
-    if (!search.trim()) {
-      alert("Please select an exercise before saving.");
-      return;
-    }
 
-    if (isNaN(intensity) || intensity < 1 || intensity > 10) {
-      alert("Intensity must be a number between 1 and 10.");
+    if (!(12 > sleepHours && sleepHours > 3)) {
+      alert("Please enter a valid number of hours slept");
       return;
     }
     const newEntry = {
       id: Date.now().toString(),
-      name: search,
-      intensity: intensity,
+      bedtime: bedtime,
+      sleepHours: sleepHours,
     };
 
-    setData((prev) => ({
+    setEntryData((prev) => ({
       ...prev,
-      data: [...prev.data, newEntry],
+      data: [newEntry],
     }));
-
     closeModal();
   };
 
   return (
     <View style={styles.container}>
       <CustomText style={{ flex: 1, fontSize: 24 }}>ADD ENTRY</CustomText>
-      <View style={styles.searchContainer}>
-        <TextInput style={styles.searchInput} placeholder='search...' placeholderTextColor={"#FBF1E6"} onChangeText={handleSearch} />
-      </View>
       <View style={{ flex: 4 }}>
-        <FlatList
-          data={exercises}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.listItem} onPress={() => selectExercise(item)}>
-              <CustomText style={styles.listItemText}>{item.name}</CustomText>
-            </TouchableOpacity>
-          )}
-        />
+        <View style={[styles.choiceRow, { flex: 1 }]}>
+          <TouchableOpacity
+            style={{ flex: 2 }}
+            onPress={() => showTimePicker(true)}
+          >
+            <CustomText style={styles.choiceLabel}>Set Bedtime</CustomText>
+          </TouchableOpacity>
+          <TouchableWithoutFeedback onPress={() => showTimePicker(true)}>
+            <CustomText
+              style={{
+                flex: 1,
+                fontSize: 24,
+                backgroundColor: "#8C7871",
+                color: "#FBF1E6",
+                padding: 5,
+                borderRadius: 5,
+              }}
+            >
+              {formatTime(bedtime)}
+            </CustomText>
+          </TouchableWithoutFeedback>
+        </View>
+        <View style={[styles.choiceRow, { flex: 1 }]}>
+          <TouchableOpacity style={{ flex: 2 }}>
+            <CustomText style={styles.choiceLabel}>Set Hours Slept</CustomText>
+          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <TextInput
+              inputMode="numeric"
+              placeholder="6"
+              placeholderTextColor={"#FBF1E6"}
+              onChangeText={(text) => {
+                setSleepHours(parseInt(text));
+              }}
+              style={{
+                backgroundColor: "#8C7871",
+                color: "#FBF1E6",
+                padding: 5,
+                borderRadius: 5,
+                fontFamily: "Bayon_400Regular",
+                fontSize: 24,
+                textAlign: "center",
+              }}
+            />
+          </View>
+        </View>
+        <View style={{ flex: 1 }} />
       </View>
-      <View style={styles.choiceRow}>
-        <View style={{ flex: 2 }}>
-          <CustomText style={styles.choiceLabel}>Exercise</CustomText>
-          <CustomText style={styles.choiceText}>{search}</CustomText>
-        </View>
-        <View style={{ flex: 1 }}>
-          <CustomText style={styles.choiceLabel}>Intensity</CustomText>
-          <TextInput style={[styles.choiceText, { padding: 0 }]} placeholder='1-10' maxLength={2} selectTextOnFocus={true} textAlign='center' keyboardType='numeric' placeholderTextColor={"#FBF1E6"} onChangeText={text => setIntensity(Number(text))} />
-        </View>
+      <View style={{ flex: 1 }}></View>
+      <TouchableOpacity style={styles.saveButton} onPress={saveEntry}>
+        <CustomText style={styles.saveButtonText}>SAVE</CustomText>
+      </TouchableOpacity>
 
-      </View>
-      <TouchableOpacity style={styles.saveButton} onPress={saveEntry}><CustomText style={styles.saveButtonText}>SAVE</CustomText></TouchableOpacity>
+      {timePicker && (
+        <RNDateTimePicker
+          value={new Date()}
+          mode="time"
+          display="clock"
+          onChange={(event, selectedDate) => {
+            showTimePicker(false);
+            if (selectedDate) {
+              setBedtime(selectedDate);
+            }
+          }}
+        />
+      )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -107,52 +122,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#FBF1E6",
     color: "#8C7871",
   },
-  searchContainer: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "#8c7871",
-    color: "#FBF1E6",
-    borderRadius: 20,
-    justifyContent: "space-between",
-    paddingHorizontal: 40,
-    marginBottom: 10,
-  },
-
-  searchInput: {
-    flex: 1,
-    color: "#FBF1E6",
-    textAlignVertical: "center",
-    fontSize: 10,
-    fontFamily: "Bayon_400Regular",
-  },
-  //layout to be fixed on web
-  listItem: {
-    flex: 1,
-  },
-  listItemText: {
-    fontSize: 16,
-  },
   choiceRow: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     marginVertical: 10,
     paddingHorizontal: 10,
     paddingBottom: 0,
-    backgroundColor: "#5B4B45",
     borderRadius: 10,
   },
   choiceText: {
     fontFamily: "Bayon_400Regular",
     fontSize: 16,
-    color: "#FBF1E6",
-    backgroundColor: "#5B4B45",
   },
   choiceLabel: {
-    height:10,
-    fontSize: 8,
-    color: "#8c7871",
-    backgroundColor: "#5B4B45",
+    fontSize: 24,
   },
   saveButton: {
     flex: 1,
@@ -169,4 +153,4 @@ const styles = StyleSheet.create({
     color: "#FBF1E6",
     textAlign: "center",
   },
-})
+});

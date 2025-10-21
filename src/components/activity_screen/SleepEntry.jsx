@@ -1,27 +1,28 @@
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { Picker } from "@react-native-picker/picker";
-import { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import CustomText from "../CustomText";
 
 export default function SleepEntry({ setEntryData, closeModal }) {
   const [bedtime, setBedtime] = useState(new Date());
-  const [sleepHours, setSleepHours] = useState(0);
-  let bedtimeStateHasChanged = false;
-
+  const [sleepHours, setSleepHours] = useState(6);
   const [timePicker, showTimePicker] = useState(false);
 
-  useEffect(() => {
-    bedtimeStateHasChanged = true;
-  }, [bedtime]);
+  const formatTime = (date) => {
+    const h = date.getHours().toString().padStart(2, "0");
+    const m = date.getMinutes().toString().padStart(2, "0");
+    return `${h}:${m}`;
+  };
 
   const saveEntry = () => {
-    if (bedtimeStateHasChanged == false) {
-      alert("Please enter a valid bedtime");
-      return;
-    }
 
-    if (sleepHours == 0) {
+    if (!(12 > sleepHours && sleepHours > 3)) {
       alert("Please enter a valid number of hours slept");
       return;
     }
@@ -49,23 +50,46 @@ export default function SleepEntry({ setEntryData, closeModal }) {
           >
             <CustomText style={styles.choiceLabel}>Set Bedtime</CustomText>
           </TouchableOpacity>
-          <View style={{ flex: 1 }}></View>
+          <TouchableWithoutFeedback onPress={() => showTimePicker(true)}>
+            <CustomText
+              style={{
+                flex: 1,
+                fontSize: 24,
+                backgroundColor: "#8C7871",
+                color: "#FBF1E6",
+                padding: 5,
+                borderRadius: 5,
+              }}
+            >
+              {formatTime(bedtime)}
+            </CustomText>
+          </TouchableWithoutFeedback>
         </View>
         <View style={[styles.choiceRow, { flex: 1 }]}>
           <TouchableOpacity style={{ flex: 2 }}>
             <CustomText style={styles.choiceLabel}>Set Hours Slept</CustomText>
           </TouchableOpacity>
           <View style={{ flex: 1 }}>
-            <Picker
-            selectedValue={sleepHours}
-            onValueChange={(itemValue, itemIndex) => setSleepHours(itemValue)}
-          >
-            <Picker.Item label="J" value="java" />
-            <Picker.Item label="K" value="js" />
-          </Picker>
+            <TextInput
+              inputMode="numeric"
+              placeholder="6"
+              placeholderTextColor={"#FBF1E6"}
+              onChangeText={(text) => {
+                setSleepHours(parseInt(text));
+              }}
+              style={{
+                backgroundColor: "#8C7871",
+                color: "#FBF1E6",
+                padding: 5,
+                borderRadius: 5,
+                fontFamily: "Bayon_400Regular",
+                fontSize: 24,
+                textAlign: "center",
+              }}
+            />
           </View>
         </View>
-        <View style={{ flex: 1 }}/>
+        <View style={{ flex: 1 }} />
       </View>
       <View style={{ flex: 1 }}></View>
       <TouchableOpacity style={styles.saveButton} onPress={saveEntry}>
@@ -77,9 +101,11 @@ export default function SleepEntry({ setEntryData, closeModal }) {
           value={new Date()}
           mode="time"
           display="clock"
-          onChange={(date) => {
-            setBedtime(date);
+          onChange={(event, selectedDate) => {
             showTimePicker(false);
+            if (selectedDate) {
+              setBedtime(selectedDate);
+            }
           }}
         />
       )}

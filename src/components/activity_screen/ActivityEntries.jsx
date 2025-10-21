@@ -2,10 +2,10 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
   FlatList,
+  Pressable,
   StyleSheet,
   TouchableOpacity,
   View,
-  Pressable,
 } from "react-native";
 import CustomText from "../CustomText";
 import AddEntryModal from "./AddEntryModal";
@@ -69,10 +69,34 @@ export default function ActivityEntries({
             renderItem={({ item }) => (
               <Pressable onPress={() => handleDelete(item)}>
                 <View style={styles.entryRow}>
-                  <CustomText style={styles.entryText}>{item.name}</CustomText>
-                  <CustomText style={styles.entryText}>
-                    {item.intensity}
-                  </CustomText>
+                  {entryData.activity === "workout" ? (
+                    <>
+                      <CustomText style={styles.entryText}>
+                        {item.name}
+                      </CustomText>
+                      <CustomText style={styles.entryText}>
+                        {item.intensity}
+                      </CustomText>
+                    </>
+                  ) : entryData.activity === "sleep" ? (
+                    <>
+                      <CustomText style={styles.entryText}>
+                        {item.bedtime.toTimeString().slice(0, 5)}
+                      </CustomText>
+                      <CustomText style={styles.entryText}>
+                        {item.sleepHours} hrs
+                      </CustomText>
+                    </>
+                  ) : entryData.activity === "diet" ? (
+                    <>
+                      <CustomText style={styles.entryText}>
+                        {item.calories} kcal
+                      </CustomText>
+                      <CustomText style={styles.entryText}>
+                        {item.protein} g
+                      </CustomText>
+                    </>
+                  ) : null}
                 </View>
               </Pressable>
             )}
