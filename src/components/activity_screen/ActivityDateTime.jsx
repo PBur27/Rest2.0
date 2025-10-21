@@ -19,16 +19,38 @@ export default function ActivityDateTime({
     isTimeDisabled = true;
   }
 
+  const getTime = (value) => {
+    const h = value.getHours().toString().padStart(2, "0");
+    const m = value.getMinutes().toString().padStart(2, "0");
+    return `${h}:${m}`
+  }
+  const getDate = (value) => {
+    const h = value.getHours().toString().padStart(2, "0");
+    const m = value.getMinutes().toString().padStart(2, "0");
+    return `${h}:${m}`
+  }
+
   return (
     <View style={styles.row}>
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
         <View style={styles.container}>
           <Ionicons name="calendar" size={30} color="#8C7871" />
-          <CustomText style={styles.text}>
-            {date.toLocaleDateString()}
-          </CustomText>
+          <CustomText style={styles.text}>{date}</CustomText>
         </View>
       </TouchableOpacity>
+
+      {showDatePicker && (
+        <RNDateTimePicker
+          value={date}
+          onChange={(event, selectedDate) => {
+            if (event.type === "set" && selectedDate) {
+              setDate(selectedDate);
+            } else {
+              setShowDatePicker(false);
+            }
+          }}
+        />
+      )}
 
       <TouchableOpacity
         disabled={isTimeDisabled}
@@ -37,33 +59,20 @@ export default function ActivityDateTime({
       >
         <View style={styles.container}>
           <Ionicons name="time" size={30} color="#8C7871" />
-          <CustomText style={styles.text}>
-            {time.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </CustomText>
+          <CustomText style={styles.text}>{time}</CustomText>
         </View>
       </TouchableOpacity>
 
-      {showDatePicker && (
-        <RNDateTimePicker
-          value={new Date()}
-          maximumDate={new Date()}
-          onChange={(event, date) => {
-            setDate(date);
-            setShowDatePicker(false);
-          }}
-        />
-      )}
-
       {showTimePicker && (
         <RNDateTimePicker
-          value={new Date()}
+          value={time}
           mode="time"
-          onChange={(event, date) => {
-            setTime(date);
-            setShowTimePicker(false);
+          onChange={(event, selectedTime) => {
+            if (event.type === "set" && selectedTime) {
+              setTime(selectedTime);
+            } else {
+              setShowTimePicker(false);
+            }
           }}
         />
       )}
