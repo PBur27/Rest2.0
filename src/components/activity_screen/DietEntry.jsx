@@ -2,12 +2,11 @@ import { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from "react-native";
 import CustomText from "../CustomText";
 
@@ -38,52 +37,37 @@ export default function DietEntry({ setEntryData, closeModal }) {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View style={{ width: "100%", alignItems: "center" }}>
-          <CustomText style={styles.header}>ADD ENTRY</CustomText>
+        <CustomText style={styles.header}>ADD ENTRY</CustomText>
 
-          {/* Calories */}
-          <View style={styles.choiceRow}>
-            <TouchableOpacity style={{ flex: 2 }}>
-              <CustomText style={styles.choiceLabel}>Calories</CustomText>
-            </TouchableOpacity>
-            <View style={{ flex: 1 }}>
-              <TextInput
-                keyboardType="numeric"
-                selectTextOnFocus={true}
-                placeholder="0"
-                placeholderTextColor="#FBF1E6"
-                onChangeText={(text) => setCalories(parseInt(text) || 0)}
-                style={styles.input}
-                value={calories.toString()}
-              />
-            </View>
-          </View>
+        <View style={styles.choiceRow}>
+          <CustomText style={styles.choiceLabel}>Calories</CustomText>
 
-          {/* Protein */}
-          <View style={styles.choiceRow}>
-            <TouchableOpacity style={{ flex: 2 }}>
-              <CustomText style={styles.choiceLabel}>Protein</CustomText>
-            </TouchableOpacity>
-            <View style={{ flex: 1 }}>
-              <TextInput
-                keyboardType="numeric"
-                selectTextOnFocus={true}
-                placeholder="0"
-                placeholderTextColor="#FBF1E6"
-                onChangeText={(text) => setProtein(parseInt(text) || 0)}
-                style={styles.input}
-                value={protein.toString()}
-              />
-            </View>
-          </View>
-
-          {/* Save Button */}
-          <TouchableOpacity style={styles.saveButton} onPress={saveEntry}>
-            <CustomText style={styles.saveButtonText}>SAVE</CustomText>
-          </TouchableOpacity>
+          <TextInput
+            keyboardType="numeric"
+            selectTextOnFocus={true}
+            onChangeText={(text) => setCalories(parseInt(text) || 0)}
+            style={styles.input}
+            value={calories.toString()}
+          />
         </View>
+
+        <View style={styles.choiceRow}>
+          <CustomText style={styles.choiceLabel}>Protein</CustomText>
+
+          <TextInput
+            keyboardType="numeric"
+            selectTextOnFocus={true}
+            onChangeText={(text) => setProtein(parseInt(text) || 0)}
+            style={styles.input}
+            value={protein.toString()}
+          />
+        </View>
+        <View style={{ flex: 4 }} />
+        {/* Save Button */}
+        <TouchableOpacity style={styles.saveButton} onPress={saveEntry}>
+          <CustomText style={styles.saveButtonText}>SAVE</CustomText>
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
@@ -92,37 +76,52 @@ export default function DietEntry({ setEntryData, closeModal }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "90%",
-    justifyContent: "flex-start",
     backgroundColor: "#FBF1E6",
-    borderRadius: 10,
     padding: 10,
-    paddingTop: 50,
+    borderRadius: 10,
+    gap: 10,
   },
   header: {
-    fontSize: 28,
-    marginBottom: 20,
+    flex: 1,
+    fontSize: 16,
+    minHeight:16,
     color: "#8C7871",
   },
   choiceRow: {
+    flex: 2,
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginVertical: 10,
     width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+
   },
   choiceLabel: {
-    fontSize: 22,
+    flex: 2,
+    fontSize: 24,
     color: "#8C7871",
   },
-  input: {
+  timeDisplay: {
+    flex: 1,
+    backgroundColor: "#5B4B45",
+    paddingHorizontal: 10,
+    borderRadius: 10,
+  },
+  timeDisplayText: {
+    fontSize: 24,
     backgroundColor: "#5B4B45",
     color: "#FBF1E6",
-    padding: 8,
-    borderRadius: 8,
-    fontFamily: "Bayon_400Regular",
+  },
+  input:{
+    flex: 1,
+    backgroundColor: "#5B4B45",
+    paddingHorizontal: 10,
+    borderRadius: 10,
     fontSize: 24,
-    textAlign: "center",
+    lineHeight:24,
+    fontFamily: "Bayon_400Regular",
+    backgroundColor: "#5B4B45",
+    color: "#FBF1E6",
+    textAlign: "center"
   },
   saveButton: {
     marginTop: 30,
@@ -139,3 +138,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+

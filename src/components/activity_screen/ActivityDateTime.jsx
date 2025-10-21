@@ -22,20 +22,20 @@ export default function ActivityDateTime({
   const getTime = (value) => {
     const h = value.getHours().toString().padStart(2, "0");
     const m = value.getMinutes().toString().padStart(2, "0");
-    return `${h}:${m}`
-  }
+    return `${h}:${m}`;
+  };
   const getDate = (value) => {
-    const h = value.getHours().toString().padStart(2, "0");
-    const m = value.getMinutes().toString().padStart(2, "0");
-    return `${h}:${m}`
-  }
+    const m = (value.getMonth() + 1).toString().padStart(2, "0");
+    const d = value.getDate().toString().padStart(2, "0");
+    return `${m}.${d}`;
+  };
 
   return (
     <View style={styles.row}>
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
         <View style={styles.container}>
           <Ionicons name="calendar" size={30} color="#8C7871" />
-          <CustomText style={styles.text}>{date}</CustomText>
+          <CustomText style={styles.text}>{getDate(date)}</CustomText>
         </View>
       </TouchableOpacity>
 
@@ -45,6 +45,7 @@ export default function ActivityDateTime({
           onChange={(event, selectedDate) => {
             if (event.type === "set" && selectedDate) {
               setDate(selectedDate);
+              setShowDatePicker(false);
             } else {
               setShowDatePicker(false);
             }
@@ -59,7 +60,7 @@ export default function ActivityDateTime({
       >
         <View style={styles.container}>
           <Ionicons name="time" size={30} color="#8C7871" />
-          <CustomText style={styles.text}>{time}</CustomText>
+          <CustomText style={styles.text}>{getTime(time)}</CustomText>
         </View>
       </TouchableOpacity>
 
@@ -70,6 +71,7 @@ export default function ActivityDateTime({
           onChange={(event, selectedTime) => {
             if (event.type === "set" && selectedTime) {
               setTime(selectedTime);
+              setShowTimePicker(false);
             } else {
               setShowTimePicker(false);
             }

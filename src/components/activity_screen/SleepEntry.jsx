@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -35,6 +34,7 @@ export default function SleepEntry({ setEntryData, closeModal }) {
       sleepHours,
     };
 
+
     setEntryData((prev) => ({
       ...prev,
       data: [newEntry],
@@ -45,66 +45,55 @@ export default function SleepEntry({ setEntryData, closeModal }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <View style={{ width: "100%", alignItems: "center" }}>
-          <CustomText style={styles.header}>ADD ENTRY</CustomText>
+      <KeyboardAvoidingView style={styles.container}>
+        <CustomText style={styles.header}>ADD ENTRY</CustomText>
 
-          <View style={styles.choiceRow}>
-            <TouchableOpacity
-              style={{ flex: 2 }}
-              onPress={() => showTimePicker(true)}
-            >
-              <CustomText style={styles.choiceLabel}>Set Bedtime</CustomText>
-            </TouchableOpacity>
+        <View style={styles.choiceRow}>
+          <CustomText style={styles.choiceLabel}>Set Bedtime</CustomText>
 
-            <TouchableWithoutFeedback onPress={() => showTimePicker(true)}>
-              <CustomText style={styles.timeDisplay}>
-                {formatTime(bedtime)}
-              </CustomText>
-            </TouchableWithoutFeedback>
-
-            {timePicker && (
-              <RNDateTimePicker
-                value={bedtime instanceof Date ? bedtime : new Date}
-                mode="time"
-                onChange={(event, selectedDate) => {
-                  if (event.type === "set" && selectedDate) {
-                    setBedtime(selectedDate);
-                  }
-                  else{
-                    showTimePicker(false)
-                  }
-                }}
-              />
-            )}
-          </View>
-
-          <View style={styles.choiceRow}>
-            <TouchableOpacity style={{ flex: 2 }}>
-              <CustomText style={styles.choiceLabel}>
-                Set Hours Slept
-              </CustomText>
-            </TouchableOpacity>
-
-            <View style={{ flex: 1 }}>
-              <TextInput
-                keyboardType="numeric"
-                selectTextOnFocus={true}
-                onChangeText={(text) => setSleepHours(parseInt(text) || 0)}
-                style={styles.input}
-                value={sleepHours.toString()}
-              />
-            </View>
-          </View>
-
-          {/* Save Button */}
-          <TouchableOpacity style={styles.saveButton} onPress={saveEntry}>
-            <CustomText style={styles.saveButtonText}>SAVE</CustomText>
+          <TouchableOpacity
+            style={styles.timeDisplay}
+            onPress={() => showTimePicker(true)}
+          >
+            <CustomText style={styles.timeDisplayText}>
+              {formatTime(bedtime)}
+            </CustomText>
           </TouchableOpacity>
+
+          {timePicker && (
+            <RNDateTimePicker
+              value={bedtime instanceof Date ? bedtime : new Date()}
+              mode="time"
+              onChange={(event, selectedDate) => {
+                if (event.type === "set" && selectedDate) {
+                  setBedtime(selectedDate);
+                  showTimePicker(false);
+                } else {
+                  showTimePicker(false);
+                }
+              }}
+            />
+          )}
         </View>
+
+        <View style={styles.choiceRow}>
+          <CustomText style={styles.choiceLabel}>Set Hours Slept</CustomText>
+
+          <TextInput
+            inputMode="decimal"
+            selectTextOnFocus={true}
+            scrollEnabled={false}
+            textContentType=""
+            onChangeText={(text) => setSleepHours(parseFloat(text) || 0)}
+            style={styles.input}
+          />
+        </View>
+
+        <View style={{flex:4}}/>
+        {/*save*/}
+        <TouchableOpacity style={styles.saveButton} onPress={saveEntry}>
+          <CustomText style={styles.saveButtonText}>SAVE</CustomText>
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
@@ -113,46 +102,50 @@ export default function SleepEntry({ setEntryData, closeModal }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "90%",
-    justifyContent: "flex-start",
     backgroundColor: "#FBF1E6",
-    borderRadius: 10,
     padding: 10,
-    paddingTop: 50,
+    borderRadius: 10,
+    gap: 10,
   },
   header: {
-    fontSize: 28,
-    marginBottom: 20,
+    flex: 1,
+    fontSize: 16,
+    minHeight:16,
     color: "#8C7871",
   },
   choiceRow: {
+    flex: 2,
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginVertical: 10,
     width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+
   },
   choiceLabel: {
-    fontSize: 22,
+    flex: 2,
+    fontSize: 24,
     color: "#8C7871",
   },
   timeDisplay: {
     flex: 1,
-    fontSize: 24,
     backgroundColor: "#5B4B45",
-    color: "#FBF1E6",
-    padding: 8,
-    borderRadius: 8,
-    textAlign: "center",
+    paddingHorizontal: 10,
+    borderRadius: 10,
   },
-  input: {
+  timeDisplayText: {
+    fontSize: 24,
     backgroundColor: "#5B4B45",
     color: "#FBF1E6",
-    padding: 8,
-    borderRadius: 8,
-    fontFamily: "Bayon_400Regular",
+  },
+  input:{
+    flex: 1,
+    borderRadius: 10,
     fontSize: 24,
-    textAlign: "center",
+    textAlign:"center",
+    justifyContent:"flex-end",
+    fontFamily: "Bayon_400Regular",
+    color: "#FBF1E6",
+    backgroundColor: "#5B4B45",
   },
   saveButton: {
     marginTop: 30,

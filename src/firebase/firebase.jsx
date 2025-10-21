@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { initializeApp } from "firebase/app";
 import {
   getReactNativePersistence,
   initializeAuth,
@@ -6,16 +7,15 @@ import {
   signInAnonymously,
 } from "firebase/auth";
 import {
+  addDoc,
+  collection,
   doc,
   getDoc,
-  setDoc,
-  collection,
-  addDoc,
-  serverTimestamp,
   getFirestore,
+  serverTimestamp,
+  setDoc,
 } from "firebase/firestore";
 import { Platform } from "react-native";
-import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebaseConfig";
 
 export const app = initializeApp(firebaseConfig);
@@ -101,6 +101,32 @@ export function logActivityToDatabase(userId, entryData) {
     addDoc(activityRef, {
       date: serverTimestamp(),
       exercises: exercises,
+    });
+  }
+  else if (entryData.activity === "diet" && entryData.data.length > 0) {
+    const diet = [];
+    for (const meal of entryData.data) {
+      diet.push({
+        calories: meal.calories,
+        protein: meal.protein,
+      });
+    }
+    addDoc(activityRef, {
+      date: serverTimestamp(),
+      meals: diet,
+    });
+  }
+  else if (entryData.activity === "sleep" && entryData.data.length > 0) {
+    const sleep = [];
+    for (const nap of entryData.data) {
+      sleep.push({
+        bedtime: nap.bedtime,
+        sleepHours: nap.sleepHours,
+      });
+    }
+    addDoc(activityRef, {
+      date: serverTimestamp(),
+      sleep: sleep,
     });
   } else {
     console.log("Error adding activity to db");

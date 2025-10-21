@@ -3,7 +3,6 @@ import {
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -62,12 +61,8 @@ export default function ExerciseEntry({ setEntryData, closeModal }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
+      <KeyboardAvoidingView style={styles.container}>
         <CustomText style={styles.header}>ADD ENTRY</CustomText>
-
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
@@ -93,13 +88,12 @@ export default function ExerciseEntry({ setEntryData, closeModal }) {
               textAlign="center"
               keyboardType="numeric"
               placeholderTextColor="#FBF1E6"
-              onChangeText={(text) => setIntensity(Number(text) || 0)}
-              value={intensity.toString()}
+              onChangeText={(text) => setIntensity(parseInt(text) || 0)}
             />
           </View>
         </View>
 
-        <View style={{ flex: 6,marginTop:30 }}>
+        <View style={{ flex: 6 }}>
           <FlatList
             data={exercises}
             keyExtractor={(item) => item.id}
@@ -127,33 +121,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FBF1E6",
-    borderRadius: 10,
-    padding: 20,
-    alignItems: "center",
+    padding: 10,
+    borderRadius:10,
+    gap:10
   },
   header: {
     flex: 1,
-    fontSize: 24,
+    fontSize: 16,
+    minHeight:16,
     color: "#8C7871",
   },
   searchContainer: {
     flex: 1,
     width: "100%",
+    minHeight: 18,
     flexDirection: "row",
     backgroundColor: "#8C7871",
     borderRadius: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginBottom: 30,
+    paddingHorizontal: 10,
   },
   searchInput: {
     flex: 1,
     color: "#FBF1E6",
-    fontSize: 14,
+    fontSize: 16,
+    lineHeight:16,
     fontFamily: "Bayon_400Regular",
   },
   listItem: {
-    paddingVertical: 8,
+    paddingVertical: 4,
     borderBottomWidth: 0.5,
     borderColor: "#8C7871",
   },
@@ -166,10 +161,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: -20,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
     backgroundColor: "#5B4B45",
+    paddingHorizontal:10,
     borderRadius: 10,
   },
   choiceText: {
@@ -185,19 +178,16 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     flex: 1,
-    marginTop: 10,
-    marginBottom: 20,
     justifyContent: "center",
-    alignItems: "center",
+    minHeight: 18,
     backgroundColor: "#913737",
     borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 40,
+    paddingHorizontal: 10,
   },
   saveButtonText: {
     backgroundColor: "#913737",
     fontFamily: "Bayon_400Regular",
-    fontSize: 20,
+    fontSize: 16,
     color: "#FBF1E6",
   },
 });

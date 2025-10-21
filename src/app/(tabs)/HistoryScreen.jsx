@@ -8,7 +8,6 @@ import { useUser } from "../AuthContext";
 
 export default function HistoryScreen() {
   const userId = useUser();
-  console.log("User ID:", userId);
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
       <View style={styles.topBar}>

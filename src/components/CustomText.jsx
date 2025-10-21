@@ -4,6 +4,7 @@ export default function CustomText({ children, ...props }) {
   return (
     <Text
       {...props}
+      adjustsFontSizeToFit
       style={[styles.text, props.style]} // allow overrides
     >
       {children}
