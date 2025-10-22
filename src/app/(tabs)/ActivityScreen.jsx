@@ -6,9 +6,9 @@ import ActivityEntries from '../../components/activity_screen/ActivityEntries';
 import ActivityPicker from '../../components/activity_screen/ActivityPicker';
 import CustomText from '../../components/CustomText';
 import SmallLogo from '../../components/SmallLogo';
+import { calculateExertion, fetchUserData, logActivityToDatabase } from '../../firebase/firebase';
 import { styles } from "../../styles/styles";
-import { useUser } from '../AuthContext';
-import { logActivityToDatabase } from '../../firebase/firebase';
+import { useSetUserData, useUser } from '../UserDataContext';
 
 
 export default function ActivityScreen() {
@@ -18,9 +18,13 @@ export default function ActivityScreen() {
   const [time, setTime] = useState(new Date());
   const [entryData, setEntryData] = useState({activity: activity, data: []});
   const  userId = useUser()
+  const setExertionValues = useSetUserData();
 
   const saveActivity = () => {
     logActivityToDatabase(userId,entryData)
+    const updatedData = fetchUserData(userId)
+    const newExertionValues = calculateExertion(updatedData)
+    setExertionValues(newExertionValues)
     setEntryData({activity: activity, data: []})
   }
 

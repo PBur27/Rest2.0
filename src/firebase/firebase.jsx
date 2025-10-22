@@ -11,9 +11,12 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   getFirestore,
+  query,
   serverTimestamp,
   setDoc,
+  where,
 } from "firebase/firestore";
 import { Platform } from "react-native";
 import { firebaseConfig } from "./firebaseConfig";
@@ -102,8 +105,7 @@ export function logActivityToDatabase(userId, entryData) {
       date: serverTimestamp(),
       exercises: exercises,
     });
-  }
-  else if (entryData.activity === "diet" && entryData.data.length > 0) {
+  } else if (entryData.activity === "diet" && entryData.data.length > 0) {
     const diet = [];
     for (const meal of entryData.data) {
       diet.push({
@@ -115,8 +117,7 @@ export function logActivityToDatabase(userId, entryData) {
       date: serverTimestamp(),
       meals: diet,
     });
-  }
-  else if (entryData.activity === "sleep" && entryData.data.length > 0) {
+  } else if (entryData.activity === "sleep" && entryData.data.length > 0) {
     const sleep = [];
     for (const nap of entryData.data) {
       sleep.push({
@@ -130,6 +131,16 @@ export function logActivityToDatabase(userId, entryData) {
     });
   } else {
     console.log("Error adding activity to db");
+  }
+}
+
+export async function getExerciseInfo(ref) {
+  const exercise = await getDoc(ref);
+
+  if (exercise.exists()) {
+    return exercise.data();
+  } else {
+    console.warn("No such document!");
   }
 }
 
@@ -150,60 +161,134 @@ export async function fetchUserData(userId) {
     query(dietRef, where("date", ">=", sevenDaysAgo))
   );
 
-  const days = {};
+  const days = [];
   const today = new Date();
-  for (let i = 0; i < 7; i++) {
-    const day = new Date(today); // clone
-    day.setDate(today.getDate() - i);
-    days[day] = {};
-  }
+  today.setHours(0, 0, 0, 0);
 
-  const workoutData = workoutDocs.forEach((doc) => {
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(today);
+    day.setDate(today.getDate() - i);
+    days.push({
+      date: day,
+      exercises: [],
+      sleep: [],
+      diet: [],
+    });
+  }
+  const findMatchingDay = (date) => {
+    const targetDate = new Date(date);
+    targetDate.setHours(0, 0, 0, 0);
+    return days.find((day) => day.date.getTime() === targetDate.getTime());
+  };
+
+  workoutDocs.forEach((doc) => {
     const data = doc.data();
     const { date, exercises } = data;
     const jsDate = date.toDate();
-    const day = jsDate.toISOString().split("T")[0];
-    if (!days[day]) {
-      days[day] = {};
+    const matchingDay = findMatchingDay(jsDate);
+    if (matchingDay && exercises) {
+      matchingDay.exercises = [...matchingDay.exercises, ...exercises];
     }
-    if (!days[day]["exercises"]) {
-      days[day]["exercises"] = [];
-    }
-    days[day]["exercises"].push(...exercises);
-    return days;
-  });
-  const sleepData = sleepDocs.forEach((doc) => {
-    const data = doc.data();
-    const { date, sleepHours } = data;
-    const jsDate = date.toDate();
-    const day = jsDate.toISOString().split("T")[0];
-    if (!days[day]) {
-      days[day] = {};
-    }
-    if (!days[day]["sleep"]) {
-      days[day]["sleep"] = [];
-    }
-    days[day]["sleep"].push(sleepHours);
-    return days;
-  });
-  const dietData = dietDocs.forEach((doc) => {
-    const data = doc.data();
-    const { date, calories, protein } = data;
-    const jsDate = date.toDate();
-    const day = jsDate.toISOString().split("T")[0];
-    if (!days[day]) {
-      days[day] = {};
-    }
-    if (!days[day]["diet"]) {
-      days[day]["diet"] = [];
-    }
-    days[day]["diet"].push({ calories, protein });
-    return days;
   });
 
-  const daysArray = Object.entries(days)
-    .sort(([a], [b]) => new Date(a) - new Date(b))
-    .map(([date, data]) => ({ date, ...data }));
+  sleepDocs.forEach((doc) => {
+    const data = doc.data();
+    const { date, sleep } = data;
+    const jsDate = date.toDate();
+    const matchingDay = findMatchingDay(jsDate);
+    if (matchingDay && sleep) {
+      matchingDay.sleep = [...matchingDay.sleep, ...sleep];
+    }
+  });
 
-  return daysArray;
+  dietDocs.forEach((doc) => {
+    const data = doc.data();
+    const { date, meals } = data;
+    const jsDate = date.toDate();
+    const matchingDay = findMatchingDay(jsDate);
+    if (matchingDay && meals) {
+      matchingDay.diet = [...matchingDay.diet, ...meals];
+    }
+  });
+
+  days.sort((a, b) => b.date - a.date);
+
+  return days;
+}
+
+export async function calculateExertion(days) {
+  const exertionTotal = {
+    front: {
+      head: 0,
+      traps: 1,
+      shoulders: 2,
+      chest: 1,
+      biceps: 2,
+      triceps: 1,
+      forearms: 3,
+      abs: 2,
+      obliques: 0,
+      quads: 0,
+      calves: 0,
+      feet: 0,
+    },
+    back: {
+      head: 0,
+      traps: 0,
+      shoulders: 0,
+      triceps: 0,
+      forearms: 0,
+      rhomboids: 0,
+      lats: 0,
+      erectorSpinae: 0,
+      obliques: 0,
+      glutes: 0,
+      hamstrings: 0,
+      calves: 0,
+      feet: 0,
+    },
+  };
+  for (const day of days) {
+    var protein = 0;
+    if (day.diet) {
+      for (const meal of day.diet) {
+        protein += meal.protein;
+      }
+    }
+    //weight to be added
+    const weight = 75;
+    const sleepIndex =
+      (1 / (1 + Math.pow(10, -(day.sleep?.[0] ?? 7) + 7))) * 0.125 * 0.5;
+    const dietIndex =
+      (1 /
+        (1 + Math.pow(100, -(protein === 0 ? 1.2 : protein / weight) + 1.2))) *
+      0.125 *
+      0.5;
+    const recovery = -0.25 * 0.75 - sleepIndex - dietIndex;
+
+    const muscleGroups = {};
+    if (day["exercises"]) {
+      for (const exercise of day["exercises"]) {
+        const muscles = await getExerciseInfo(exercise["exerciseDocRef"]);
+        for (const item of muscles.muscles) {
+          if (!(item in muscleGroups)) {
+            muscleGroups[item] = exercise["intensity"] / 10;
+          } else {
+            muscleGroups[item] = Math.min(
+              muscleGroups[item] + exercise["intensity"] / 10,
+              1
+            );
+          }
+        }
+      }
+    }
+    for (const muscle in exertionTotal.front) {
+      const exertion = muscleGroups[muscle] ?? 0;
+      exertionTotal.front[muscle] += recovery;
+      exertionTotal.front[muscle] = Math.max(0, exertionTotal.front[muscle]);
+      exertionTotal.front[muscle] += exertion;
+      exertionTotal.front[muscle] = Math.min(1, exertionTotal.front[muscle]);
+    }
+  }
+  return exertionTotal;
 }

@@ -4,13 +4,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BatteryIcon from "../../components/BatteryIcon";
 import BodyImage from "../../components/body_screen/BodyImage";
 import SmallLogo from "../../components/SmallLogo";
-import { useUser } from "../AuthContext";
+import { useUser, useUserData } from "../UserDataContext";
 
 
 
 export default function HomeScreen() {
   const userId = useUser();
-  console.log("User ID:", userId);
+  const exertionValues = useUserData();
+
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
       <View style={styles.topBar}>
@@ -18,7 +19,7 @@ export default function HomeScreen() {
         <BatteryIcon />
       </View>
       <View style={[styles.container, {flex:13}]}>
-        <BodyImage />
+        <BodyImage organism={exertionValues} />
       </View>
     </SafeAreaView>
   );

@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "../../components/CustomText";
 import SmallLogo from "../../components/SmallLogo";
-import { useUser } from "../AuthContext";
+import { useUser } from "../UserDataContext";
 
 
 

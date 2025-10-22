@@ -1,9 +1,9 @@
-import { Stack } from "expo-router";
-import { AuthProvider } from "./AuthContext";
-import { useFonts } from '@expo-google-fonts/bayon/useFonts';
 import { Bayon_400Regular } from '@expo-google-fonts/bayon/400Regular';
+import { useFonts } from '@expo-google-fonts/bayon/useFonts';
+import { Stack } from "expo-router";
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { UserDataProvider } from "./UserDataContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,7 +22,7 @@ export default function RootLayout() {
     return null;
   }
   return (
-    <AuthProvider>
+    <UserDataProvider>
       <Stack
         screenOptions={{
           headerShown: false
@@ -57,6 +57,6 @@ export default function RootLayout() {
           }}
         />
       </Stack>
-    </AuthProvider>
+    </UserDataProvider>
   );
 }
