@@ -15,6 +15,7 @@ export default function ActivityEntries({
   entryData,
   setEntryData,
   saveActivity,
+  dateTime
 }) {
   const [modalVisible, setModalVisible] = React.useState(false);
   const addEntry = () => {
@@ -124,6 +125,7 @@ export default function ActivityEntries({
         onClose={() => setModalVisible(false)}
         activity={activity}
         setEntryData={setEntryData}
+        dateTime={dateTime}
       />
     </>
   );

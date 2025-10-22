@@ -14,7 +14,6 @@ import {
   getDocs,
   getFirestore,
   query,
-  serverTimestamp,
   setDoc,
   where,
 } from "firebase/firestore";
@@ -90,7 +89,8 @@ export async function loginOrRegister(userId) {
   }
 }
 
-export function logActivityToDatabase(userId, entryData) {
+export async function logActivityToDatabase(userId, entryData) {
+  console.log(entryData);
   const activityRef = collection(db, "users", userId, entryData.activity);
   if (entryData.activity === "workout" && entryData.data.length > 0) {
     const exercises = [];
@@ -102,7 +102,7 @@ export function logActivityToDatabase(userId, entryData) {
       });
     }
     addDoc(activityRef, {
-      date: serverTimestamp(),
+      date: entryData.data[0].id,
       exercises: exercises,
     });
   } else if (entryData.activity === "diet" && entryData.data.length > 0) {
@@ -114,7 +114,7 @@ export function logActivityToDatabase(userId, entryData) {
       });
     }
     addDoc(activityRef, {
-      date: serverTimestamp(),
+      date: entryData.data[0].id,
       meals: diet,
     });
   } else if (entryData.activity === "sleep" && entryData.data.length > 0) {
@@ -126,21 +126,11 @@ export function logActivityToDatabase(userId, entryData) {
       });
     }
     addDoc(activityRef, {
-      date: serverTimestamp(),
+      date: entryData.data[0].id,
       sleep: sleep,
     });
   } else {
     console.log("Error adding activity to db");
-  }
-}
-
-export async function getExerciseInfo(ref) {
-  const exercise = await getDoc(ref);
-
-  if (exercise.exists()) {
-    return exercise.data();
-  } else {
-    console.warn("No such document!");
   }
 }
 
@@ -211,22 +201,46 @@ export async function fetchUserData(userId) {
     }
   });
 
-  days.sort((a, b) => b.date - a.date);
-
+  days.sort((a, b) => a.date.getTime() - b.date.getTime());
   return days;
+}
+export async function getExerciseInfo(ref) {
+  const exercise = await getDoc(ref);
+
+  if (exercise.exists()) {
+    return exercise.data().muscles;
+  } else {
+    console.warn("No such document!");
+  }
+}
+function formatValuesForDisplay(exertionTotal) {
+  for (const side in exertionTotal) {
+    for (const muscle in exertionTotal[side]) {
+      if (exertionTotal[side][muscle] > 0.7) {
+        exertionTotal[side][muscle] = 3;
+      } else if (exertionTotal[side][muscle] > 0.4) {
+        exertionTotal[side][muscle] = 2;
+      } else if (exertionTotal[side][muscle] > 0.2) {
+        exertionTotal[side][muscle] = 1;
+      } else {
+        exertionTotal[side][muscle] = 0;
+      }
+    }
+  }
 }
 
 export async function calculateExertion(days) {
   const exertionTotal = {
     front: {
       head: 0,
-      traps: 1,
-      shoulders: 2,
-      chest: 1,
-      biceps: 2,
-      triceps: 1,
-      forearms: 3,
-      abs: 2,
+      traps: 0,
+      shoulders: 0,
+      chest: 0,
+      lats: 0,
+      biceps: 0,
+      triceps: 0,
+      forearms: 0,
+      abs: 0,
       obliques: 0,
       quads: 0,
       calves: 0,
@@ -249,16 +263,19 @@ export async function calculateExertion(days) {
     },
   };
   for (const day of days) {
-    var protein = 0;
-    if (day.diet) {
+    let protein = 0;
+    let sleep = 6;
+    if (day.diet.length > 0) {
       for (const meal of day.diet) {
         protein += meal.protein;
       }
     }
+    if (day.sleep.length > 0) {
+      sleep = day.sleep[0].sleepHours;
+    }
     //weight to be added
     const weight = 75;
-    const sleepIndex =
-      (1 / (1 + Math.pow(10, -(day.sleep?.[0] ?? 7) + 7))) * 0.125 * 0.5;
+    const sleepIndex = (1 / (1 + Math.pow(10, -sleep + 7))) * 0.125 * 0.5;
     const dietIndex =
       (1 /
         (1 + Math.pow(100, -(protein === 0 ? 1.2 : protein / weight) + 1.2))) *
@@ -266,29 +283,55 @@ export async function calculateExertion(days) {
       0.5;
     const recovery = -0.25 * 0.75 - sleepIndex - dietIndex;
 
-    const muscleGroups = {};
-    if (day["exercises"]) {
-      for (const exercise of day["exercises"]) {
-        const muscles = await getExerciseInfo(exercise["exerciseDocRef"]);
-        for (const item of muscles.muscles) {
-          if (!(item in muscleGroups)) {
-            muscleGroups[item] = exercise["intensity"] / 10;
+    for (const side in exertionTotal) {
+      for (const muscle in exertionTotal[side]) {
+        exertionTotal[side][muscle] = Math.max(
+          0,
+          exertionTotal[side][muscle] + recovery // add or subtract depending on your recovery sign
+        );
+      }
+    }
+
+    if (day.exercises.length > 0) {
+      const muscleGroupExertionValues = {};
+      const exercises = day.exercises;
+      for (const exercise of exercises) {
+        //function returns the array of muscles
+        const musclesWorked = await getExerciseInfo(exercise.exerciseDocRef);
+        const intensity = exercise.intensity / 10; // normalize once here
+
+        for (const muscle of musclesWorked) {
+          if (muscleGroupExertionValues[muscle] === undefined) {
+            muscleGroupExertionValues[muscle] = intensity;
           } else {
-            muscleGroups[item] = Math.min(
-              muscleGroups[item] + exercise["intensity"] / 10,
-              1
-            );
+            muscleGroupExertionValues[muscle] += intensity;
+          }
+          // Cap at 1
+          if (muscleGroupExertionValues[muscle] > 1) {
+            muscleGroupExertionValues[muscle] = 1;
           }
         }
       }
-    }
-    for (const muscle in exertionTotal.front) {
-      const exertion = muscleGroups[muscle] ?? 0;
-      exertionTotal.front[muscle] += recovery;
-      exertionTotal.front[muscle] = Math.max(0, exertionTotal.front[muscle]);
-      exertionTotal.front[muscle] += exertion;
-      exertionTotal.front[muscle] = Math.min(1, exertionTotal.front[muscle]);
+      for (const muscle in muscleGroupExertionValues) {
+        if (exertionTotal.front[muscle] != undefined) {
+          if (exertionTotal.front[muscle] + recovery <= 0) {
+            exertionTotal.front[muscle] = 0;
+          } else {
+            exertionTotal.front[muscle] += recovery;
+          }
+
+          exertionTotal.front[muscle] += muscleGroupExertionValues[muscle];
+        }
+      }
     }
   }
+  formatValuesForDisplay(exertionTotal);
   return exertionTotal;
+}
+
+export async function updateExertionData(userId, entryData) {
+  await logActivityToDatabase(userId, entryData);
+  const data = await fetchUserData(userId);
+  const values = await calculateExertion(data);
+  return values;
 }

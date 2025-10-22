@@ -6,11 +6,11 @@ import {
   View,
 } from "react-native";
 
-import ExerciseEntry from "./ExerciseEntry";
 import DietEntry from "./DietEntry";
+import ExerciseEntry from "./ExerciseEntry";
 import SleepEntry from "./SleepEntry";
 
-export default function AddEntryModal({ isVisible, onClose, activity, setEntryData }) {
+export default function AddEntryModal({ isVisible, onClose, activity, setEntryData, dateTime }) {
 
   return (
     <Modal
@@ -27,13 +27,13 @@ export default function AddEntryModal({ isVisible, onClose, activity, setEntryDa
         <TouchableWithoutFeedback onPress={() => { }}>
           <View style={styles.modalContent}>
               {activity === "workout" && (
-                <ExerciseEntry setEntryData={setEntryData} closeModal={onClose} />
+                <ExerciseEntry setEntryData={setEntryData} closeModal={onClose} dateTime={dateTime} />
               )}
               {activity === "diet" && (
-                <DietEntry setEntryData={setEntryData} closeModal={onClose} />
+                <DietEntry setEntryData={setEntryData} closeModal={onClose} dateTime={dateTime} />
               )}
               {activity === "sleep" && (
-                <SleepEntry setEntryData={setEntryData} closeModal={onClose} />
+                <SleepEntry setEntryData={setEntryData} closeModal={onClose} dateTime={dateTime} />
               )}
           </View>
         </TouchableWithoutFeedback>

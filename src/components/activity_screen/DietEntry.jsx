@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import CustomText from "../CustomText";
 
-export default function DietEntry({ setEntryData, closeModal }) {
+export default function DietEntry({ setEntryData, closeModal, dateTime }) {
   const [calories, setCalories] = useState(0);
   const [protein, setProtein] = useState(0);
 
@@ -20,7 +20,7 @@ export default function DietEntry({ setEntryData, closeModal }) {
       return;
     }
     const newEntry = {
-      id: Date.now().toString(),
+      id: dateTime,
       calories,
       protein,
     };

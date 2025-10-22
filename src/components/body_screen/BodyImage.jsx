@@ -2,7 +2,8 @@ import { StyleSheet, View } from 'react-native';
 import { BodyParts } from './BodyParts';
 
 export default function BodyImage({organism}) {
-console.log(organism)
+
+  
 
   const exertion = {
     0: "#8C7871",
