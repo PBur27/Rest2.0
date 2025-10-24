@@ -5,6 +5,7 @@ import BatteryIcon from "../../components/BatteryIcon";
 import BodyImage from "../../components/body_screen/BodyImage";
 import SmallLogo from "../../components/SmallLogo";
 import { useUser, useUserData } from "../UserDataContext";
+import TopBar from "../../components/TopBar";
 
 
 
@@ -14,10 +15,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
-      <View style={styles.topBar}>
-        <SmallLogo />
-        <BatteryIcon />
-      </View>
+      <TopBar element={BatteryIcon}/>
       <View style={[styles.container, {flex:13}]}>
         <BodyImage organism={exertionValues} />
       </View>

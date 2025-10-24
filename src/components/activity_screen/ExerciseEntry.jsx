@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import CustomText from "../CustomText";
 
-export default function ExerciseEntry({ setEntryData, closeModal, dateTime }) {
+export default function ExerciseEntry({ data, setData, closeModal }) {
   const baseExercises = [
     { id: "1", name: "Push Ups" },
     { id: "2", name: "Squats" },
@@ -46,15 +46,13 @@ export default function ExerciseEntry({ setEntryData, closeModal, dateTime }) {
     }
 
     const newEntry = {
-      id: dateTime,
+      id: new Date().toISOString(),
       name: search,
       intensity: intensity,
     };
 
-    setEntryData((prev) => ({
-      ...prev,
-      data: [...prev.data, newEntry],
-    }));
+    const newData = [...data,newEntry]
+    setData(newData)
 
     closeModal();
   };

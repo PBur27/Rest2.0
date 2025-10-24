@@ -6,11 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import CustomText from "../CustomText";
 
-export default function DietEntry({ setEntryData, closeModal, dateTime }) {
+export default function DietEntry({ data, setData, closeModal }) {
   const [calories, setCalories] = useState(0);
   const [protein, setProtein] = useState(0);
 
@@ -20,24 +20,20 @@ export default function DietEntry({ setEntryData, closeModal, dateTime }) {
       return;
     }
     const newEntry = {
-      id: dateTime,
+      id: new Date().toISOString(),
       calories,
       protein,
     };
 
-    setEntryData((prev) => ({
-      ...prev,
-      data: [newEntry],
-    }));
+    const newData = [...data, newEntry];
+    setData(newData);
 
     closeModal();
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        style={styles.container}
-      >
+      <KeyboardAvoidingView style={styles.container}>
         <CustomText style={styles.header}>ADD ENTRY</CustomText>
 
         <View style={styles.choiceRow}>
@@ -84,7 +80,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     fontSize: 16,
-    minHeight:16,
+    minHeight: 16,
     color: "#8C7871",
   },
   choiceRow: {
@@ -93,7 +89,6 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-
   },
   choiceLabel: {
     flex: 2,
@@ -111,17 +106,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#5B4B45",
     color: "#FBF1E6",
   },
-  input:{
+  input: {
     flex: 1,
     backgroundColor: "#5B4B45",
     paddingHorizontal: 10,
     borderRadius: 10,
     fontSize: 24,
-    lineHeight:24,
+    lineHeight: 24,
     fontFamily: "Bayon_400Regular",
     backgroundColor: "#5B4B45",
     color: "#FBF1E6",
-    textAlign: "center"
+    textAlign: "center",
   },
   saveButton: {
     marginTop: 30,
@@ -138,4 +133,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-

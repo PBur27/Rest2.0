@@ -65,7 +65,6 @@ export async function anonymousLogin() {
     });
   } catch (error) {
     console.error("Anonymous login error:", error.code, error.message);
-    throw error; // Re-throw the error to be handled by the caller
   }
 }
 
@@ -75,14 +74,14 @@ export async function loginOrRegister(userId) {
     const userSnap = await getDoc(userRef);
 
     if (!userSnap.exists()) {
-      // User doesn't exist → register
+      // login user if exists, register if doesn't
       await setDoc(userRef, {});
       console.log("User registered:", userId);
     } else {
       console.log("User exists:", userId);
     }
 
-    return userId; // pass it back to setUid
+    return userId; // return the new or existing id
   } catch (error) {
     console.error("Error checking/creating user:", error);
     throw error;
@@ -90,11 +89,12 @@ export async function loginOrRegister(userId) {
 }
 
 export async function logActivityToDatabase(userId, entryData) {
-  console.log(entryData);
+  //choose collection based on entryData
   const activityRef = collection(db, "users", userId, entryData.activity);
   if (entryData.activity === "workout" && entryData.data.length > 0) {
     const exercises = [];
     for (const exercise of entryData.data) {
+      //create reference to execrices collection
       const exerciseDocRef = doc(db, "exercises", exercise["name"]);
       exercises.push({
         exerciseDocRef,

@@ -12,20 +12,16 @@ import AddEntryModal from "./AddEntryModal";
 
 export default function ActivityEntries({
   activity,
-  entryData,
-  setEntryData,
+  data,
+  setData,
   saveActivity,
-  dateTime
 }) {
   const [modalVisible, setModalVisible] = React.useState(false);
   const addEntry = () => {
     setModalVisible(true);
   };
   const handleDelete = (itemToDelete) => {
-    setEntryData((prev) => ({
-      ...prev,
-      data: prev.data.filter((item) => item !== itemToDelete),
-    }));
+    setData((data) => data.filter((item) => item !== itemToDelete));
   };
 
   let headerTextLeft, headerTextRight;
@@ -47,7 +43,7 @@ export default function ActivityEntries({
         <View style={styles.headerRow}>
           <CustomText
             style={
-              entryData.data.length === 0
+              data.length === 0
                 ? [styles.headerText, { color: "#FBF1E6" }]
                 : styles.headerText
             }
@@ -56,7 +52,7 @@ export default function ActivityEntries({
           </CustomText>
           <CustomText
             style={
-              entryData.data.length === 0
+              data.length === 0
                 ? [styles.headerText, { color: "#FBF1E6" }]
                 : styles.headerText
             }
@@ -66,11 +62,11 @@ export default function ActivityEntries({
         </View>
         <View style={styles.listContainer}>
           <FlatList
-            data={entryData.data}
+            data={data}
             renderItem={({ item }) => (
               <Pressable onPress={() => handleDelete(item)}>
                 <View style={styles.entryRow}>
-                  {entryData.activity === "workout" ? (
+                  {activity === "workout" ? (
                     <>
                       <CustomText style={styles.entryText}>
                         {item.name}
@@ -79,7 +75,7 @@ export default function ActivityEntries({
                         {item.intensity}
                       </CustomText>
                     </>
-                  ) : entryData.activity === "sleep" ? (
+                  ) : activity === "sleep" ? (
                     <>
                       <CustomText style={styles.entryText}>
                         {item.bedtime.toTimeString().slice(0, 5)}
@@ -88,7 +84,7 @@ export default function ActivityEntries({
                         {item.sleepHours} hrs
                       </CustomText>
                     </>
-                  ) : entryData.activity === "diet" ? (
+                  ) : activity === "diet" ? (
                     <>
                       <CustomText style={styles.entryText}>
                         {item.calories} kcal
@@ -104,7 +100,7 @@ export default function ActivityEntries({
           />
         </View>
         <View style={styles.buttonContainer}>
-          {!entryData?.data || entryData.data.length === 0 ? (
+          {!data || data.length === 0 ? (
             <TouchableOpacity style={styles.button} onPress={addEntry}>
               <Ionicons name="add" size={80} color="#FBF1E6" />
             </TouchableOpacity>
@@ -124,8 +120,8 @@ export default function ActivityEntries({
         isVisible={modalVisible}
         onClose={() => setModalVisible(false)}
         activity={activity}
-        setEntryData={setEntryData}
-        dateTime={dateTime}
+        data={data}
+        setData={setData}
       />
     </>
   );

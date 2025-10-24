@@ -29,16 +29,13 @@ export default function SleepEntry({ setEntryData, closeModal, dateTime }) {
     }
 
     const newEntry = {
-      id: dateTime,
+      id: new Date().toISOString(),
       bedtime,
       sleepHours,
     };
 
-
-    setEntryData((prev) => ({
-      ...prev,
-      data: [newEntry],
-    }));
+    const newData = [...data, newEntry];
+    setData(newData);
 
     closeModal();
   };
@@ -89,7 +86,7 @@ export default function SleepEntry({ setEntryData, closeModal, dateTime }) {
           />
         </View>
 
-        <View style={{flex:4}}/>
+        <View style={{ flex: 4 }} />
         {/*save*/}
         <TouchableOpacity style={styles.saveButton} onPress={saveEntry}>
           <CustomText style={styles.saveButtonText}>SAVE</CustomText>
@@ -110,7 +107,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 1,
     fontSize: 16,
-    minHeight:16,
+    minHeight: 16,
     color: "#8C7871",
   },
   choiceRow: {
@@ -119,7 +116,6 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-
   },
   choiceLabel: {
     flex: 2,
@@ -137,12 +133,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#5B4B45",
     color: "#FBF1E6",
   },
-  input:{
+  input: {
     flex: 1,
     borderRadius: 10,
     fontSize: 24,
-    textAlign:"center",
-    justifyContent:"flex-end",
+    textAlign: "center",
+    justifyContent: "flex-end",
     fontFamily: "Bayon_400Regular",
     color: "#FBF1E6",
     backgroundColor: "#5B4B45",

@@ -16,7 +16,7 @@ export default function Index() {
   const setExertionValues = useSetUserData();
 
   useEffect(() => {
-    async function getUserId() {
+    async function getUserData() {
       try {
         const userId = await anonymousLogin();
         await loginOrRegister(userId);
@@ -29,7 +29,7 @@ export default function Index() {
         console.error("Login failed:", error);
       }
     }
-    getUserId();
+    getUserData();
   }, []);
 
   return (

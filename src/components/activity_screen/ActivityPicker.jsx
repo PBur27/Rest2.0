@@ -21,6 +21,8 @@ export default function ActivityPicker({ activity, setActivity }) {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#8C7871",
+    color: "#FBF1E6",
     flex: 2,
     flexDirection: "row",
     justifyContent: "space-between",
