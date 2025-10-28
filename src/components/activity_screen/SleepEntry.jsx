@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import CustomText from "../CustomText";
 
-export default function SleepEntry({ setEntryData, closeModal, dateTime }) {
+export default function SleepEntry({ data, closeModal, setData }) {
   const [bedtime, setBedtime] = useState(new Date());
   const [sleepHours, setSleepHours] = useState(6);
   const [timePicker, showTimePicker] = useState(false);

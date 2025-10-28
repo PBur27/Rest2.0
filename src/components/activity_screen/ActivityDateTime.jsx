@@ -12,8 +12,6 @@ export default function ActivityDateTime({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
- 
-
   let isTimeDisabled = false;
   if (activity == "sleep") {
     isTimeDisabled = true;
@@ -88,7 +86,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
+    paddingTop:10,
+    backgroundColor:"#FBF1E6"
   },
   container: {
     flexDirection: "row",

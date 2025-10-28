@@ -5,7 +5,7 @@ import ActivityDateTime from "../../components/activity_screen/ActivityDateTime"
 import ActivityEntries from "../../components/activity_screen/ActivityEntries";
 import ActivityPicker from "../../components/activity_screen/ActivityPicker";
 import TopBar from "../../components/TopBar";
-import { updateExertionData } from "../../firebase/firebase";
+import { updateData } from "../../firebase/firebase";
 import { useSetUserData, useUser } from "../UserDataContext";
 
 export default function ActivityScreen() {
@@ -19,9 +19,9 @@ export default function ActivityScreen() {
 
   const saveActivity = async () => {
     try {
-      const newData = await updateExertionData(userId, entryData);
+      const newData = await updateData(userId, entry);
       await setExertionValues(newData);
-      setEntry({ activity: activity, dateTime: dateTime, data: [] });
+      setEntry({ activity: "workout", dateTime: new Date(), data: [] });
     } catch (error) {
       console.error("Error saving activity:", error);
     }
@@ -50,15 +50,16 @@ export default function ActivityScreen() {
 
   return (
     <SafeAreaView style={styles.backgroundContainer} edges={["top"]}>
-      <TopBar rightElement="Add Data" />
+      <TopBar display="Add Data" />
       <ActivityPicker activity={entry.activity} setActivity={setEntryActivity} />
+      <ActivityDateTime activity={entry.activity} dateTime={entry.dateTime} setDateTime={setEntryDateTime} />
       <View style={[styles.contentContainer,{ flex: 11 }]}>
-        <ActivityDateTime activity={entry.activity} dateTime={entry.dateTime} setDateTime={setEntryDateTime} />
         <ActivityEntries
           activity={entry.activity}
           dateTime={entry.dateTime}
           data = {entry.data}
           setData={setEntryData}
+          saveActivity={saveActivity}
         ></ActivityEntries>
       </View>
     </SafeAreaView>
@@ -68,7 +69,7 @@ export default function ActivityScreen() {
 const styles = StyleSheet.create({
   backgroundContainer: {
     flex: 1,
-    backgroundColor: "#FBF1E6",
+    backgroundColor: "#8C7871",
   },
   contentContainer: {
     backgroundColor: "#FBF1E6",

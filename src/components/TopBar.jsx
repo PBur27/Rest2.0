@@ -1,15 +1,16 @@
 import { StyleSheet, View } from "react-native";
-import SmallLogo from "../components/SmallLogo";
+import BatteryIcon from "./BatteryIcon";
 import CustomText from "./CustomText";
+import SmallLogo from "./SmallLogo";
 
-export default function TopBar(rightElement) {
+export default function TopBar({ display }) {
   return (
     <View style={styles.topBar}>
       <SmallLogo />
-      {typeof rightElement === "string" ? (
-        <CustomText>{rightElement}</CustomText>
-      ) : (
-        <rightElement/>
+      {display === "battery" ? (
+        <BatteryIcon/>
+      ):(
+        <CustomText>{display}</CustomText>
       )}
     </View>
   );

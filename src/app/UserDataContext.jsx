@@ -14,18 +14,12 @@ export const UserDataProvider = ({ children }) => {
         setUser(null);
     };
 
-    const setUserData = async (data) => {
-        return new Promise((resolve) => {
-            setUserExertionData(data);
-            // Use requestAnimationFrame to ensure the state update has been processed
-            requestAnimationFrame(() => {
-                resolve();
-            });
-        });
+    const setUserData = (data) => {
+        setUserExertionData(data)
     }
 
     return (
-        <UserDataContext.Provider value={{ user, setUid, clearUid, userExertionData, setUserData }}>
+        <UserDataContext.Provider value={{ user, setUid, clearUid, userExertionData, setUserExertionData }}>
             {children}
         </UserDataContext.Provider>
     );
@@ -34,4 +28,4 @@ export const UserDataProvider = ({ children }) => {
 export const useUser = () => useContext(UserDataContext).user;
 export const useSetUid = () => useContext(UserDataContext).setUid;
 export const useUserData = () => useContext(UserDataContext).userExertionData;
-export const useSetUserData = () => useContext(UserDataContext).setUserData;
+export const useSetUserData = () => useContext(UserDataContext).setUserExertionData;

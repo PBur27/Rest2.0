@@ -88,12 +88,12 @@ export async function loginOrRegister(userId) {
   }
 }
 
-export async function logActivityToDatabase(userId, entryData) {
-  //choose collection based on entryData
-  const activityRef = collection(db, "users", userId, entryData.activity);
-  if (entryData.activity === "workout" && entryData.data.length > 0) {
+export async function logActivityToDatabase(userId, entry) {
+  //choose collection based on entry
+  const activityRef = collection(db, "users", userId, entry.activity);
+  if (entry.activity === "workout" && entry.data.length > 0) {
     const exercises = [];
-    for (const exercise of entryData.data) {
+    for (const exercise of entry.data) {
       //create reference to execrices collection
       const exerciseDocRef = doc(db, "exercises", exercise["name"]);
       exercises.push({
@@ -102,32 +102,32 @@ export async function logActivityToDatabase(userId, entryData) {
       });
     }
     addDoc(activityRef, {
-      date: entryData.data[0].id,
-      exercises: exercises,
+      date: entry.dateTime,
+      data: exercises,
     });
-  } else if (entryData.activity === "diet" && entryData.data.length > 0) {
+  } else if (entry.activity === "diet" && entry.data.length > 0) {
     const diet = [];
-    for (const meal of entryData.data) {
+    for (const meal of entry.data) {
       diet.push({
         calories: meal.calories,
         protein: meal.protein,
       });
     }
     addDoc(activityRef, {
-      date: entryData.data[0].id,
-      meals: diet,
+      date: entry.dateTime,
+      data: diet,
     });
-  } else if (entryData.activity === "sleep" && entryData.data.length > 0) {
+  } else if (entry.activity === "sleep" && entry.data.length > 0) {
     const sleep = [];
-    for (const nap of entryData.data) {
+    for (const nap of entry.data) {
       sleep.push({
         bedtime: nap.bedtime,
         sleepHours: nap.sleepHours,
       });
     }
     addDoc(activityRef, {
-      date: entryData.data[0].id,
-      sleep: sleep,
+      date: entry.dateTime,
+      data: sleep,
     });
   } else {
     console.log("Error adding activity to db");
@@ -139,8 +139,11 @@ export async function fetchUserData(userId) {
   const sleepRef = collection(db, "users", userId, "sleep");
   const dietRef = collection(db, "users", userId, "diet");
 
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setHours(0, 0, 0, 0);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
 
+  // Fetch data from the last 7 days
   const workoutDocs = await getDocs(
     query(workoutRef, where("date", ">=", sevenDaysAgo))
   );
@@ -165,68 +168,33 @@ export async function fetchUserData(userId) {
       diet: [],
     });
   }
-  const findMatchingDay = (date) => {
-    const targetDate = new Date(date);
-    targetDate.setHours(0, 0, 0, 0);
-    return days.find((day) => day.date.getTime() === targetDate.getTime());
+
+  // same date check
+  const isSameDay = (d1, d2) =>
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate();
+
+  // Distribute each document into its corresponding day
+  const addDocsToDays = (docs, key) => {
+    docs.forEach((doc) => {
+      const data = doc.data();
+      const docDate = data.date.toDate ? data.date.toDate() : data.date;
+      console.log(data)
+
+      days.forEach((day) => {
+        if (isSameDay(day.date, docDate)) {
+          day[key].push(...data.data);
+        }
+      });
+    });
   };
 
-  workoutDocs.forEach((doc) => {
-    const data = doc.data();
-    const { date, exercises } = data;
-    const jsDate = date.toDate();
-    const matchingDay = findMatchingDay(jsDate);
-    if (matchingDay && exercises) {
-      matchingDay.exercises = [...matchingDay.exercises, ...exercises];
-    }
-  });
+  addDocsToDays(workoutDocs.docs, "exercises");
+  addDocsToDays(sleepDocs.docs, "sleep");
+  addDocsToDays(dietDocs.docs, "diet");
 
-  sleepDocs.forEach((doc) => {
-    const data = doc.data();
-    const { date, sleep } = data;
-    const jsDate = date.toDate();
-    const matchingDay = findMatchingDay(jsDate);
-    if (matchingDay && sleep) {
-      matchingDay.sleep = [...matchingDay.sleep, ...sleep];
-    }
-  });
-
-  dietDocs.forEach((doc) => {
-    const data = doc.data();
-    const { date, meals } = data;
-    const jsDate = date.toDate();
-    const matchingDay = findMatchingDay(jsDate);
-    if (matchingDay && meals) {
-      matchingDay.diet = [...matchingDay.diet, ...meals];
-    }
-  });
-
-  days.sort((a, b) => a.date.getTime() - b.date.getTime());
   return days;
-}
-export async function getExerciseInfo(ref) {
-  const exercise = await getDoc(ref);
-
-  if (exercise.exists()) {
-    return exercise.data().muscles;
-  } else {
-    console.warn("No such document!");
-  }
-}
-function formatValuesForDisplay(exertionTotal) {
-  for (const side in exertionTotal) {
-    for (const muscle in exertionTotal[side]) {
-      if (exertionTotal[side][muscle] > 0.7) {
-        exertionTotal[side][muscle] = 3;
-      } else if (exertionTotal[side][muscle] > 0.4) {
-        exertionTotal[side][muscle] = 2;
-      } else if (exertionTotal[side][muscle] > 0.2) {
-        exertionTotal[side][muscle] = 1;
-      } else {
-        exertionTotal[side][muscle] = 0;
-      }
-    }
-  }
 }
 
 export async function calculateExertion(days) {
@@ -262,9 +230,37 @@ export async function calculateExertion(days) {
       feet: 0,
     },
   };
+
+  function formatValuesForDisplay(exertionTotal) {
+    for (const side in exertionTotal) {
+      for (const muscle in exertionTotal[side]) {
+        if (exertionTotal[side][muscle] > 0.7) {
+          exertionTotal[side][muscle] = 3;
+        } else if (exertionTotal[side][muscle] > 0.4) {
+          exertionTotal[side][muscle] = 2;
+        } else if (exertionTotal[side][muscle] > 0.2) {
+          exertionTotal[side][muscle] = 1;
+        } else {
+          exertionTotal[side][muscle] = 0;
+        }
+      }
+    }
+  }
+
+  async function getExerciseInfo(ref) {
+    const exercise = await getDoc(ref);
+
+    if (exercise.exists()) {
+      return exercise.data().muscles;
+    } else {
+      console.warn("No such document!");
+    }
+  }
+
+  days.sort((a, b) => a.date - b.date);
   for (const day of days) {
     let protein = 0;
-    let sleep = 6;
+    let sleep = 7;
     if (day.diet.length > 0) {
       for (const meal of day.diet) {
         protein += meal.protein;
@@ -275,19 +271,17 @@ export async function calculateExertion(days) {
     }
     //weight to be added
     const weight = 75;
-    const sleepIndex = (1 / (1 + Math.pow(10, -sleep + 7))) * 0.125 * 0.5;
-    const dietIndex =
-      (1 /
-        (1 + Math.pow(100, -(protein === 0 ? 1.2 : protein / weight) + 1.2))) *
-      0.125 *
-      0.5;
+    const sleepIndex = (1 / (1 + Math.pow(10, -sleep + 7))) * 0.125;
+    const dietIndex = (1 / (1 + Math.pow(100, -(protein === 0 ? 1.2 : protein / weight) + 1.6))) * 0.125;
     const recovery = -0.25 * 0.75 - sleepIndex - dietIndex;
+    
+    
 
     for (const side in exertionTotal) {
       for (const muscle in exertionTotal[side]) {
         exertionTotal[side][muscle] = Math.max(
           0,
-          exertionTotal[side][muscle] + recovery // add or subtract depending on your recovery sign
+          exertionTotal[side][muscle] + recovery
         );
       }
     }
@@ -324,13 +318,15 @@ export async function calculateExertion(days) {
         }
       }
     }
+    console.log(day.date,"recovery",recovery,"sleepindex",sleepIndex,"dietindex",dietIndex,exertionTotal)
+    
   }
   formatValuesForDisplay(exertionTotal);
   return exertionTotal;
 }
 
-export async function updateExertionData(userId, entryData) {
-  await logActivityToDatabase(userId, entryData);
+export async function updateData(userId, entry) {
+  await logActivityToDatabase(userId, entry);
   const data = await fetchUserData(userId);
   const values = await calculateExertion(data);
   return values;
