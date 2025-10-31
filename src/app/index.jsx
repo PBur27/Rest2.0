@@ -9,11 +9,12 @@ import {
   loginOrRegister,
 } from "../firebase/firebase";
 import { styles } from "../styles/styles";
-import { useSetUid, useSetUserData } from "./UserDataContext";
+import { useSetUid, useSetUserData, useSetUserExertion} from "./UserDataContext";
 
 export default function Index() {
   const setUid = useSetUid();
-  const setExertionValues = useSetUserData();
+  const setUserData = useSetUserData();
+  const setExertionValues = useSetUserExertion();
 
   useEffect(() => {
     async function getUserData() {
@@ -22,6 +23,7 @@ export default function Index() {
         await loginOrRegister(userId);
         await setUid(userId);
         const data = await fetchUserData(userId);
+        await setUserData(data)
         const exertionValues = await calculateExertion(data);
         await setExertionValues(exertionValues);
         router.replace({ pathname: "/(tabs)/HomeScreen" });

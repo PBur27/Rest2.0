@@ -5,8 +5,8 @@ import ActivityDateTime from "../../components/activity_screen/ActivityDateTime"
 import ActivityEntries from "../../components/activity_screen/ActivityEntries";
 import ActivityPicker from "../../components/activity_screen/ActivityPicker";
 import TopBar from "../../components/TopBar";
-import { updateData } from "../../firebase/firebase";
-import { useSetUserData, useUser } from "../UserDataContext";
+import { calculateExertion, updateData } from "../../firebase/firebase";
+import { useSetUserData, useSetUserExertion, useUserData } from "../UserDataContext";
 
 export default function ActivityScreen() {
   const [entry, setEntry] = useState({
@@ -14,13 +14,20 @@ export default function ActivityScreen() {
     dateTime: new Date(),
     data: [],
   });
-  const userId = useUser();
-  const setExertionValues = useSetUserData();
+
+  const userData = useUserData();
+  const setUserData = useSetUserData();
+  const setUserExertion = useSetUserExertion();
 
   const saveActivity = async () => {
     try {
-      const newData = await updateData(userId, entry);
-      await setExertionValues(newData);
+      const oldDaysData = userData;
+      const newDaysData = updateData(entry, oldDaysData);
+      const newExertionValues = await calculateExertion(newDaysData);
+
+      setUserData(newDaysData)
+      await setUserExertion(newExertionValues)
+
       setEntry({ activity: "workout", dateTime: new Date(), data: [] });
     } catch (error) {
       console.error("Error saving activity:", error);
@@ -53,11 +60,11 @@ export default function ActivityScreen() {
       <TopBar display="Add Data" />
       <ActivityPicker activity={entry.activity} setActivity={setEntryActivity} />
       <ActivityDateTime activity={entry.activity} dateTime={entry.dateTime} setDateTime={setEntryDateTime} />
-      <View style={[styles.contentContainer,{ flex: 11 }]}>
+      <View style={[styles.contentContainer, { flex: 11 }]}>
         <ActivityEntries
           activity={entry.activity}
           dateTime={entry.dateTime}
-          data = {entry.data}
+          data={entry.data}
           setData={setEntryData}
           saveActivity={saveActivity}
         ></ActivityEntries>

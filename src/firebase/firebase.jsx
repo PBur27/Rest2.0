@@ -180,7 +180,7 @@ export async function fetchUserData(userId) {
     docs.forEach((doc) => {
       const data = doc.data();
       const docDate = data.date.toDate ? data.date.toDate() : data.date;
-      console.log(data)
+
 
       days.forEach((day) => {
         if (isSameDay(day.date, docDate)) {
@@ -274,8 +274,8 @@ export async function calculateExertion(days) {
     const sleepIndex = (1 / (1 + Math.pow(10, -sleep + 7))) * 0.125;
     const dietIndex = (1 / (1 + Math.pow(100, -(protein === 0 ? 1.2 : protein / weight) + 1.6))) * 0.125;
     const recovery = -0.25 * 0.75 - sleepIndex - dietIndex;
-    
-    
+
+
 
     for (const side in exertionTotal) {
       for (const muscle in exertionTotal[side]) {
@@ -318,16 +318,56 @@ export async function calculateExertion(days) {
         }
       }
     }
-    console.log(day.date,"recovery",recovery,"sleepindex",sleepIndex,"dietindex",dietIndex,exertionTotal)
-    
+    //console.log(day.date, "recovery", recovery, "sleepindex", sleepIndex, "dietindex", dietIndex, exertionTotal)
+
   }
   formatValuesForDisplay(exertionTotal);
   return exertionTotal;
 }
 
-export async function updateData(userId, entry) {
-  await logActivityToDatabase(userId, entry);
-  const data = await fetchUserData(userId);
-  const values = await calculateExertion(data);
-  return values;
+export function updateData(entry, days) {
+  // same date check
+  const isSameDay = (d1, d2) =>
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate();
+
+  for (const day of days) {
+    if (isSameDay(day.date, entry.dateTime)) {
+      
+      if (entry.activity == "workout") {
+        if (entry.data.length > 0) {
+          for (const element of entry.data) {
+            const exerciseDocRef = doc(db, "exercises", element["name"]);
+            day.exercises.push({ exerciseDocRef, intensity: element["intensity"] })
+          }
+        }
+        else {
+          console.warn("error updating data: empty exercise entry error")
+        }
+      }
+      else if (entry.activity == "sleep") {
+        if (entry.data.length > 0) {
+          for (const element of entry.data) {
+            day.sleep.push({ bedtime: element["bedtime"], sleepHours: element["sleepHours"] })
+          }
+        }
+        else {
+          console.warn("error updating data: empty sleep entry error")
+        }
+      }
+      else if (entry.activity == "diet") {
+        if (entry.data.length > 0) {
+          for (const element of entry.data) {
+            day.diet.push({ calories: element["calories"], protein: element["protein"] })
+          }
+        }
+        else {
+          console.warn("error updating data: empty diet entry error")
+        }
+      }
+    }
+  }
+
+  return days
 }
