@@ -1,21 +1,20 @@
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomText from "../../components/CustomText";
-import SmallLogo from "../../components/SmallLogo";
-import { useUser } from "../UserDataContext";
+import TopBar from "../../components/TopBar";
+import HistoryDays from "../../components/history_screen/HistoryDays";
+import { useUserData } from "../UserDataContext";
 
 
 
 export default function HistoryScreen() {
-  const userId = useUser();
+  const userData = useUserData();
+  
+
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
-      <View style={styles.topBar}>
-        <SmallLogo />
-        <CustomText >History</CustomText>
-      </View>
+      <TopBar display={"History"} />
       <View style={[styles.container, { flex: 13 }]}>
-      
+        <HistoryDays userData={userData} />
       </View>
     </SafeAreaView>
   );

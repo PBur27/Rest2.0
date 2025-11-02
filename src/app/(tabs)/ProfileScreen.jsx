@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "../../components/CustomText";
-import SmallLogo from "../../components/SmallLogo";
+import TopBar from "../../components/TopBar";
 import { useUser } from "../UserDataContext";
 
 
@@ -10,11 +10,10 @@ export default function ProfileScreen() {
   const userId = useUser();
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
-      <View style={styles.topBar}>
-        <SmallLogo />
-        <CustomText >Profile</CustomText>
-      </View>
+      <TopBar display={"Account"}/>
       <View style={[styles.container, { flex: 13 }]}>
+
+        <CustomText>User Id: {userId}</CustomText>
 
       </View>
     </SafeAreaView>

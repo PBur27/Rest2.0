@@ -9,7 +9,7 @@ import {
   loginOrRegister,
 } from "../firebase/firebase";
 import { styles } from "../styles/styles";
-import { useSetUid, useSetUserData, useSetUserExertion} from "./UserDataContext";
+import { useSetUid, useSetUserData, useSetUserExertion } from "./UserDataContext";
 
 export default function Index() {
   const setUid = useSetUid();
