@@ -1,7 +1,9 @@
+import { Ionicons } from '@expo/vector-icons'
 import { Pressable, StyleSheet } from 'react-native'
+import { View } from 'react-native-web'
 import CustomText from '../CustomText'
 
-export default function HistoryDayOverviewPressable({data}) {
+export default function HistoryDayOverviewPressable({ data }) {
 
     const date = `${data.date.getDate()}.${data.date.getMonth()}.${data.date.getFullYear()}`
     const exercises = data.exercises.length
@@ -12,10 +14,16 @@ export default function HistoryDayOverviewPressable({data}) {
     return (
         <Pressable style={styles.dayButton}>
 
-            <CustomText style={styles.dayButtonText}>{date}</CustomText>
-            <CustomText style={styles.dayButtonText}>Exercises: {exercises}</CustomText>
-            <CustomText style={styles.dayButtonText}>Meals: {meals}</CustomText>
-            <CustomText style={styles.dayButtonText}>Sleep: {sleep}</CustomText>
+            <View style={styles.row}>
+                <CustomText style={styles.dayButtonText}>{date}</CustomText>
+                <CustomText style={styles.dayButtonText}>Press to Edit</CustomText>
+                <Ionicons />
+            </View>
+            <View style={styles.row}>
+                <CustomText style={styles.dayButtonText}>Exercises: {exercises}</CustomText>
+                <CustomText style={styles.dayButtonText}>Meals: {meals}</CustomText>
+                <CustomText style={styles.dayButtonText}>Sleep: {sleep}</CustomText>
+            </View>
 
         </Pressable>
     )
@@ -23,16 +31,18 @@ export default function HistoryDayOverviewPressable({data}) {
 
 const styles = StyleSheet.create({
     dayButton: {
-        flexDirection:"row",
         flex: 1,
         backgroundColor: "#8C7871",
-        padding:20,
-        borderRadius:10
+        padding: 20,
+        borderRadius: 10
     },
-    dayButtonText:{
-        flex:1,
+    dayButtonText: {
+        flex: 1,
         backgroundColor: "#8C7871",
-        color:"#FBF1E6"
+        color: "#FBF1E6"
+    },
+    row: {
+        flexDirection: "row"
     }
 })
 

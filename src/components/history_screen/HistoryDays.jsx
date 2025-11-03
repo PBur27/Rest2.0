@@ -5,6 +5,7 @@ export default function HistoryDays({ userData }) {
 
     return (
         <FlatList
+        
         style={styles.container}
             contentContainerStyle={styles.listContainer}
             data={userData}
