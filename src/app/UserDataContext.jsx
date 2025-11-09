@@ -6,13 +6,14 @@ export const UserDataProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [userData, setUserData] = useState(null);
     const [userExertion, setUserExertion] = useState(null);
+    const [exercisesData, setExercisesData] = useState(null)
 
     const setUid = (userData) => {
         setUser(userData);
     };
 
     return (
-        <UserDataContext.Provider value={{ user, setUid,  userData, setUserData, userExertion, setUserExertion }}>
+        <UserDataContext.Provider value={{ user, setUid,  userData, setUserData, userExertion, setUserExertion, exercisesData, setExercisesData}}>
             {children}
         </UserDataContext.Provider>
     );
@@ -24,3 +25,5 @@ export const useUserData = () => useContext(UserDataContext).userData;
 export const useSetUserData = () => useContext(UserDataContext).setUserData;
 export const useUserExertion = () => useContext(UserDataContext).userExertion;
 export const useSetUserExertion = () => useContext(UserDataContext).setUserExertion;
+export const useExercisesData = () => useContext(UserDataContext).exercisesData
+export const useSetExercisesData = () => useContext(UserDataContext).setExercisesData

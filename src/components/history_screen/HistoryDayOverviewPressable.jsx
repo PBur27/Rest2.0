@@ -1,49 +1,50 @@
-import { Ionicons } from '@expo/vector-icons'
-import { Pressable, StyleSheet } from 'react-native'
-import { View } from 'react-native-web'
+import { Pressable, StyleSheet, View } from 'react-native'
 import CustomText from '../CustomText'
 
-export default function HistoryDayOverviewPressable({ data }) {
-
-    const date = `${data.date.getDate()}.${data.date.getMonth()}.${data.date.getFullYear()}`
+export default function HistoryDayOverviewPressable({ data, openModal }) {
+    const date = `${data.date.getDate()}.${data.date.getMonth() + 1}.${data.date.getFullYear()}`
     const exercises = data.exercises.length
     const meals = data.diet.length
     const sleep = data.sleep.length
-    console.log(date)
 
     return (
-        <Pressable style={styles.dayButton}>
-
+        <Pressable 
+            style={styles.dayButton}
+            onPress={() => openModal(data)}
+        >
             <View style={styles.row}>
                 <CustomText style={styles.dayButtonText}>{date}</CustomText>
-                <CustomText style={styles.dayButtonText}>Press to Edit</CustomText>
-                <Ionicons />
+                <CustomText style={[styles.dayButtonText, { color: "#913737" }]}>Press to Edit</CustomText>
             </View>
             <View style={styles.row}>
                 <CustomText style={styles.dayButtonText}>Exercises: {exercises}</CustomText>
                 <CustomText style={styles.dayButtonText}>Meals: {meals}</CustomText>
                 <CustomText style={styles.dayButtonText}>Sleep: {sleep}</CustomText>
             </View>
-
         </Pressable>
+        
     )
 }
 
 const styles = StyleSheet.create({
     dayButton: {
-        flex: 1,
+        marginVertical: 5,
         backgroundColor: "#8C7871",
-        padding: 20,
-        borderRadius: 10
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        gap: 5
     },
     dayButtonText: {
-        flex: 1,
-        backgroundColor: "#8C7871",
-        color: "#FBF1E6"
+        color: "#FBF1E6",
+        backgroundColor: "transparent",
+        fontSize: 16
     },
     row: {
-        flexDirection: "row"
-    }
+        flexDirection: "row",
+        justifyContent: "space-around",
+        width: "100%"
+    },
+
 })
 
 

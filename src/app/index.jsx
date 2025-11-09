@@ -2,19 +2,18 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import { Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  anonymousLogin,
-  calculateExertion,
-  fetchUserData,
-  loginOrRegister,
-} from "../firebase/firebase";
+import { calculateExertion } from "../firebase/calculateExertion";
+import { fetchExercisesData } from "../firebase/fetchExercisesData";
+import { fetchUserData } from "../firebase/fetchUserData";
+import { anonymousLogin } from "../firebase/loginOrRegister";
 import { styles } from "../styles/styles";
-import { useSetUid, useSetUserData, useSetUserExertion } from "./UserDataContext";
+import { useSetExercisesData, useSetUid, useSetUserData, useSetUserExertion } from "./UserDataContext";
 
 export default function Index() {
   const setUid = useSetUid();
   const setUserData = useSetUserData();
   const setExertionValues = useSetUserExertion();
+  const setExercisesData = useSetExercisesData();
 
   useEffect(() => {
     async function getUserData() {
@@ -22,9 +21,11 @@ export default function Index() {
         const userId = await anonymousLogin();
         await loginOrRegister(userId);
         await setUid(userId);
-        const data = await fetchUserData(userId);
-        await setUserData(data)
-        const exertionValues = await calculateExertion(data);
+        const userData = await fetchUserData(userId);
+        await setUserData(userData)
+        const exercisesData = await fetchExercisesData();
+        await setExercisesData(exercisesData)
+        const exertionValues = calculateExertion(userData,exercisesData);
         await setExertionValues(exertionValues);
         router.replace({ pathname: "/(tabs)/HomeScreen" });
       } catch (error) {

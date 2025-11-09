@@ -1,0 +1,70 @@
+
+export async function calculateExertion(days, exercisesInfo) {
+    const exertionTotal = {
+        front: {
+            head: 0, traps: 0, shoulders: 0, chest: 0, lats: 0,
+            biceps: 0, triceps: 0, forearms: 0, abs: 0, obliques: 0,
+            quads: 0, calves: 0, feet: 0,
+        },
+        back: {
+            head: 0, traps: 0, shoulders: 0, triceps: 0, forearms: 0,
+            rhomboids: 0, lats: 0, erectorSpinae: 0, obliques: 0,
+            glutes: 0, hamstrings: 0, calves: 0, feet: 0,
+        },
+    };
+
+    const formatValuesForDisplay = (data) => {
+        for (const side in data) {
+            for (const muscle in data[side]) {
+                const val = data[side][muscle];
+                data[side][muscle] =
+                    val > 0.7 ? 3 : val > 0.4 ? 2 : val > 0.2 ? 1 : 0;
+            }
+        }
+    };
+
+    days.sort((a, b) => a.date - b.date);
+
+    for (const day of days) {
+        let protein = 0;
+        let sleep = 7;
+        if (day.diet.length > 0) {
+            for (const meal of day.diet) {
+                protein += meal.protein;
+            }
+        }
+        if (day.sleep.length > 0) {
+            sleep = day.sleep[0].sleepHours;
+        }
+        //weight to be added 
+        const weight = 75;
+        const sleepIndex = (1 / (1 + Math.pow(10, -sleep + 7))) * 0.125;
+        const dietIndex = (1 / (1 + Math.pow(100, -(protein === 0 ? 1.2 : protein / weight) + 1.2))) * 0.125;
+        const recovery = -0.25 * 0.75 - sleepIndex - dietIndex;
+
+        for (const side in exertionTotal) {
+            for (const muscle in exertionTotal[side]) {
+                exertionTotal[side][muscle] = Math.max(
+                    0,
+                    exertionTotal[side][muscle] + recovery
+                );
+            }
+        }
+
+        for (const exercise of day.exercises) {
+            const muscles = exercisesInfo[exercise];
+            const intensity = exercise.intensity / 10;
+            for (const muscle of muscles) {
+                if (exertionTotal.front[muscle] !== undefined) {
+                    exertionTotal.front[muscle] = Math.min(
+                        1,
+                        exertionTotal.front[muscle] + intensity
+                    );
+                }
+            }
+        }
+    }
+
+    formatValuesForDisplay(exertionTotal);
+    return exertionTotal;
+}

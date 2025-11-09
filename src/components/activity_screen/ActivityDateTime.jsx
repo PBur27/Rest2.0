@@ -12,10 +12,7 @@ export default function ActivityDateTime({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
-  let isTimeDisabled = false;
-  if (activity == "sleep") {
-    isTimeDisabled = true;
-  }
+  let isTimeDisabled = true;
 
   const getTime = (value) => {
     const h = value.getHours().toString().padStart(2, "0");

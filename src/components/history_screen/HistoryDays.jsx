@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet } from 'react-native'
 import HistoryDayOverviewPressable from './HistoryDayOverviewPressable'
 
-export default function HistoryDays({ userData }) {
+export default function HistoryDays({ userData, openModal }) {
 
     return (
         <FlatList
@@ -9,7 +9,7 @@ export default function HistoryDays({ userData }) {
         style={styles.container}
             contentContainerStyle={styles.listContainer}
             data={userData}
-            renderItem={({ item }) => <HistoryDayOverviewPressable data={item} />}
+            renderItem={({ item }) => <HistoryDayOverviewPressable data={item} openModal={openModal}/>}
         />
 
     )

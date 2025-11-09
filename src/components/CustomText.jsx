@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
     fontFamily: "Bayon_400Regular",
-    backgroundColor: "#FBF1E6",
+    backgroundColor: "transparent",
     color: "#8C7871",
   },
 });
