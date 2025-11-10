@@ -2,22 +2,13 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebaseApp";
 
 export async function fetchUserData(userId) {
-  const workoutRef = collection(db, "users", userId, "workout");
-  const sleepRef = collection(db, "users", userId, "sleep");
-  const dietRef = collection(db, "users", userId, "diet");
-
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setHours(0, 0, 0, 0);
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-
-  const [workoutDocs, sleepDocs, dietDocs] = await Promise.all([
-    getDocs(query(workoutRef, where("date", ">=", sevenDaysAgo))),
-    getDocs(query(sleepRef, where("date", ">=", sevenDaysAgo))),
-    getDocs(query(dietRef, where("date", ">=", sevenDaysAgo))),
-  ]);
+  const userDataDays = collection(db, "users", userId, "days");
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const sevenDaysAgo = today.setDate(sevenDaysAgo.getDate() - 7);
+
+  const dataFromLastSevenDays = await getDocs(query(userDataDays, where('date', ">=", sevenDaysAgo)))
+
 
   const days = Array.from({ length: 7 }, (_, i) => ({
     date: new Date(today.getFullYear(), today.getMonth(), today.getDate() - i),

@@ -5,7 +5,8 @@ import ActivityDateTime from "../../components/activity_screen/ActivityDateTime"
 import ActivityEntries from "../../components/activity_screen/ActivityEntries";
 import ActivityPicker from "../../components/activity_screen/ActivityPicker";
 import TopBar from "../../components/TopBar";
-import { calculateExertion, updateData } from "../../firebase/firebase";
+import { calculateExertion } from "../../firebase/calculateExertion";
+import { updateData } from "../../firebase/updateUserData";
 import { useSetUserData, useSetUserExertion, useUserData } from "../UserDataContext";
 
 export default function ActivityScreen() {

@@ -19,14 +19,13 @@ export default function Index() {
     async function getUserData() {
       try {
         const userId = await anonymousLogin();
-        await loginOrRegister(userId);
-        await setUid(userId);
+        setUid(userId);
         const userData = await fetchUserData(userId);
-        await setUserData(userData)
+        setUserData(userData)
         const exercisesData = await fetchExercisesData();
-        await setExercisesData(exercisesData)
+        setExercisesData(exercisesData)
         const exertionValues = calculateExertion(userData,exercisesData);
-        await setExertionValues(exertionValues);
+        setExertionValues(exertionValues);
         router.replace({ pathname: "/(tabs)/HomeScreen" });
       } catch (error) {
         console.error("Login failed:", error);
