@@ -3,9 +3,13 @@ import { createContext, useContext, useState } from "react";
 export const UserDataContext = createContext();
 
 export const UserDataProvider = ({ children }) => {
+    //stores userId
     const [user, setUser] = useState(null);
+    //stores an array of days holding data regarding exercises, diet and sleep
     const [userData, setUserData] = useState(null);
+    //stores the exertion values for each muscle in the body
     const [userExertion, setUserExertion] = useState(null);
+    //stores data regarding exercises, fetched from database in key value pairs eg. {exercise: [...muscles], exercise: [...muscles], ... } 
     const [exercisesData, setExercisesData] = useState(null)
 
     const setUid = (userData) => {

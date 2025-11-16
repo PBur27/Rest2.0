@@ -2,15 +2,17 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebaseApp";
 
 export async function fetchUserData(userId) {
-  const userDataDays = collection(db, "users", userId, "days");
+  const userDataDaysRef = collection(db, "users", userId, "days");
 
   const today = new Date();
-  const sevenDaysAgo = today.setDate(sevenDaysAgo.getDate() - 7);
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(today.getDate() - 7);
 
-  const dataFromLastSevenDays = await getDocs(query(userDataDays, where('date', ">=", sevenDaysAgo)))
+
+  const userDaysDocs = await getDocs(query(userDataDaysRef, where('date', ">=", sevenDaysAgo))).docs
 
 
-  const days = Array.from({ length: 7 }, (_, i) => ({
+  const dataDays = Array.from({ length: 7 }, (_, i) => ({
     date: new Date(today.getFullYear(), today.getMonth(), today.getDate() - i),
     exercises: [],
     sleep: [],
@@ -22,19 +24,32 @@ export async function fetchUserData(userId) {
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate();
 
-  const addDocsToDays = (docs, key) => {
-    docs.forEach((doc) => {
+
+  if (userDaysDocs) {
+    userDaysDocs.forEach((doc) => {
       const data = doc.data();
       const docDate = data.date.toDate ? data.date.toDate() : data.date;
-      days.forEach((day) => {
-        if (isSameDay(day.date, docDate)) day[key].push(...data.data);
+      dataDays.forEach((day) => {
+        if (isSameDay(day.date, docDate)) {
+          if (data.exercises) {
+            day.exercises = data.exercises
+          }
+          if (data.sleep) {
+            day.sleep = data.sleep
+          }
+          if (data.diet) {
+            day.diet = data.diet
+          }
+        }
       });
     });
-  };
+  }
+  else {
+    console.log("fetchUserData - no data found")
+  }
 
-  addDocsToDays(workoutDocs.docs, "exercises");
-  addDocsToDays(sleepDocs.docs, "sleep");
-  addDocsToDays(dietDocs.docs, "diet");
 
-  return days;
+
+
+  return dataDays;
 }

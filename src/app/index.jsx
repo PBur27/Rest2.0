@@ -25,7 +25,7 @@ export default function Index() {
         const exercisesData = await fetchExercisesData();
         setExercisesData(exercisesData)
         const exertionValues = calculateExertion(userData,exercisesData);
-        setExertionValues(exertionValues);
+        await setExertionValues(exertionValues);
         router.replace({ pathname: "/(tabs)/HomeScreen" });
       } catch (error) {
         console.error("Login failed:", error);

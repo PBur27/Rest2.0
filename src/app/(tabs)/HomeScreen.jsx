@@ -3,13 +3,13 @@ import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BodyImage from "../../components/body_screen/BodyImage";
 import TopBar from "../../components/TopBar";
-import { useUser, useUserExertion } from "../UserDataContext";
+import { useUserExertion } from "../UserDataContext";
 
 
 
 export default function HomeScreen() {
-  const userId = useUser();
   const exertionValues = useUserExertion();
+  
 
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
