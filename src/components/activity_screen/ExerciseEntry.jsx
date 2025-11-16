@@ -12,16 +12,21 @@ import {
 import CustomText from "../CustomText";
 
 export default function ExerciseEntry({ data, setData, closeModal }) {
+
+  //to be replaced by database exercise loading
   const baseExercises = [
     { id: "1", name: "Push Ups" },
     { id: "2", name: "Squats" },
     { id: "9", name: "Pull Ups" },
   ];
 
+  //array of exercises to be displayed
   const [exercises, setExercises] = useState(baseExercises);
+  //search term for exercise filtering
   const [search, setSearch] = useState("select exercise");
   const [intensity, setIntensity] = useState(5);
 
+  //filtering function that is called whenever user changes the text inside the search bar
   const handleSearch = (text) => {
     setExercises(
       baseExercises.filter((exercise) =>
@@ -30,11 +35,13 @@ export default function ExerciseEntry({ data, setData, closeModal }) {
     );
   };
 
+  //search bar has its text set on exercise selection
   const selectExercise = (item) => {
     setSearch(item.name);
   };
 
   const saveEntry = () => {
+    //validation based on the search bar
     if (!search.trim() || search === "select exercise") {
       alert("Please select an exercise before saving.");
       return;
@@ -47,12 +54,17 @@ export default function ExerciseEntry({ data, setData, closeModal }) {
 
     const newEntry = {
       id: new Date().toISOString(),
+      //exercise name taken from search bar
       name: search,
+      //numver between 1-10
       intensity: intensity,
     };
 
-    const newData = [...data,newEntry]
+    //data array updated by adding the new entry to existing ones
+    const newData = [...data, newEntry]
+    //send data to the parent component
     setData(newData)
+
 
     closeModal();
   };
@@ -120,13 +132,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FBF1E6",
     padding: 10,
-    borderRadius:10,
-    gap:10
+    borderRadius: 10,
+    gap: 10
   },
   header: {
     flex: 1,
     fontSize: 16,
-    minHeight:16,
+    minHeight: 16,
     color: "#8C7871",
   },
   searchContainer: {
@@ -142,7 +154,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#FBF1E6",
     fontSize: 16,
-    lineHeight:16,
+    lineHeight: 16,
     fontFamily: "Bayon_400Regular",
   },
   listItem: {
@@ -160,7 +172,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#5B4B45",
-    paddingHorizontal:10,
+    paddingHorizontal: 10,
     borderRadius: 10,
   },
   choiceText: {

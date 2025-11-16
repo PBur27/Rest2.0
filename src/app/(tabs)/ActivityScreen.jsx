@@ -6,67 +6,63 @@ import ActivityEntries from "../../components/activity_screen/ActivityEntries";
 import ActivityPicker from "../../components/activity_screen/ActivityPicker";
 import TopBar from "../../components/TopBar";
 import { calculateExertion } from "../../firebase/calculateExertion";
-import { updateData } from "../../firebase/updateUserData";
-import { useSetUserData, useSetUserExertion, useUserData } from "../UserDataContext";
+import { useExercisesData, useSetUserData, useSetUserExertion, useUserData } from "../UserDataContext";
 
 export default function ActivityScreen() {
-  const [entry, setEntry] = useState({
-    activity: "workout",
-    dateTime: new Date(),
-    data: [],
-  });
-
-  const userData = useUserData();
+  //context data setters
   const setUserData = useSetUserData();
   const setUserExertion = useSetUserExertion();
+  //userData from context 
+  const dataDays = useUserData()
+  const exercisesData = useExercisesData()
+
+  const [date, setDate] = useState(null)
+  const [activity, setActivity] = useState(null)
+  const [data, setData] = useState(null)
 
   const saveActivity = async () => {
-    try {
-      const oldDaysData = userData;
-      const newDaysData = updateData(entry, oldDaysData);
-      const newExertionValues = await calculateExertion(newDaysData);
+    const isSameDay = (d1, d2) =>
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate();
 
-      setUserData(newDaysData)
-      await setUserExertion(newExertionValues)
+      //clone state to avoid state variable mutation
+      const newDataDays = structuredClone(dataDays)
 
-      setEntry({ activity: "workout", dateTime: new Date(), data: [] });
-    } catch (error) {
-      console.error("Error saving activity:", error);
-    }
+      //add data to selected day
+      for (const day of newDataDays){
+        if (isSameDay(day.date,date)){
+          if (activity == "workout"){
+            day.exercises.push(...data)
+          }
+          else if (activity == "diet"){
+            day.diet.push(...data)
+          }
+          if (activity == "sleep"){
+            day.sleep.push(...data)
+          }
+        }
+      }
+
+      // overlay would be good while these 3 are running
+      const newExertion = calculateExertion(newDataDays,exercisesData)
+      setUserData(newDataDays)
+      setUserExertion(newExertion)
+
   };
 
-  const setEntryActivity = (value) => {
-    setEntry((prev) => ({
-      ...prev,
-      activity: value,
-    }));
-  };
-  const setEntryDateTime = (value) => {
-    setEntry((prev) => ({
-      ...prev,
-      dateTime: value,
-    }));
-  };
-  const setEntryData = (value) => {
-    setEntry((prev) => ({
-      ...prev,
-      // value has to be an array
-      data: value,
-    }));
-  };
 
 
   return (
     <SafeAreaView style={styles.backgroundContainer} edges={["top"]}>
       <TopBar display="Add Data" />
-      <ActivityPicker activity={entry.activity} setActivity={setEntryActivity} />
-      <ActivityDateTime activity={entry.activity} dateTime={entry.dateTime} setDateTime={setEntryDateTime} />
+      <ActivityPicker activity={activity} setActivity={setActivity} />
+      <ActivityDateTime activity={activity} date={date} setDate={setDate} />
       <View style={[styles.contentContainer, { flex: 11 }]}>
         <ActivityEntries
-          activity={entry.activity}
-          dateTime={entry.dateTime}
-          data={entry.data}
-          setData={setEntryData}
+          activity={activity}
+          data={data}
+          setData={setData}
           saveActivity={saveActivity}
         ></ActivityEntries>
       </View>

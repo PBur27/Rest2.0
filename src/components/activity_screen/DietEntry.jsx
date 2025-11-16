@@ -21,8 +21,8 @@ export default function DietEntry({ data, setData, closeModal }) {
     }
     const newEntry = {
       id: new Date().toISOString(),
-      calories,
-      protein,
+      calories: calories,
+      protein: protein,
     };
 
     const newData = [...data, newEntry];

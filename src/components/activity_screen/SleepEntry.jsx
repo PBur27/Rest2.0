@@ -30,8 +30,8 @@ export default function SleepEntry({ data, closeModal, setData }) {
 
     const newEntry = {
       id: new Date().toISOString(),
-      bedtime,
-      sleepHours,
+      bedtime: bedtime,
+      sleepHours: sleepHours,
     };
 
     const newData = [...data, newEntry];

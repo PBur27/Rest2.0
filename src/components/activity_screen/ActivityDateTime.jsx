@@ -6,8 +6,8 @@ import CustomText from "../CustomText";
 
 export default function ActivityDateTime({
   activity,
-  dateTime,
-  setDateTime
+  date,
+  setDate
 }) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -30,16 +30,16 @@ export default function ActivityDateTime({
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
         <View style={styles.container}>
           <Ionicons name="calendar" size={30} color="#8C7871" />
-          <CustomText style={styles.text}>{getDate(dateTime)}</CustomText>
+          <CustomText style={styles.text}>{getDate(date)}</CustomText>
         </View>
       </TouchableOpacity>
 
       {showDatePicker && (
         <RNDateTimePicker
-          value={dateTime}
+          value={date}
           onChange={(event, selectedDate) => {
             if (event.type === "set" && selectedDate) {
-              setDateTime(selectedDate);
+              setDate(selectedDate);
               setShowDatePicker(false);
             } else {
               setShowDatePicker(false);
@@ -55,17 +55,17 @@ export default function ActivityDateTime({
       >
         <View style={styles.container}>
           <Ionicons name="time" size={30} color="#8C7871" />
-          <CustomText style={styles.text}>{getTime(dateTime)}</CustomText>
+          <CustomText style={styles.text}>{getTime(date)}</CustomText>
         </View>
       </TouchableOpacity>
 
       {showTimePicker && (
         <RNDateTimePicker
-          value={dateTime}
+          value={date}
           mode="time"
           onChange={(event, selectedTime) => {
             if (event.type === "set" && selectedTime) {
-              setDateTime(selectedTime);
+              setDate(selectedTime);
               setShowTimePicker(false);
             } else {
               setShowTimePicker(false);
