@@ -6,7 +6,8 @@ import ActivityEntries from "../../components/activity_screen/ActivityEntries";
 import ActivityPicker from "../../components/activity_screen/ActivityPicker";
 import TopBar from "../../components/TopBar";
 import { calculateExertion } from "../../firebase/calculateExertion";
-import { useExercisesData, useSetUserData, useSetUserExertion, useUserData } from "../UserDataContext";
+import { logUserData } from "../../firebase/logUserData";
+import { useExercisesData, useSetUserData, useSetUserExertion, useUser, useUserData } from "../UserDataContext";
 
 export default function ActivityScreen() {
   //context data setters
@@ -15,6 +16,7 @@ export default function ActivityScreen() {
   //userData from context 
   const dataDays = useUserData()
   const exercisesData = useExercisesData()
+  const userId = useUser()
 
   const [date, setDate] = useState(null)
   const [activity, setActivity] = useState(null)
@@ -48,6 +50,7 @@ export default function ActivityScreen() {
       const newExertion = calculateExertion(newDataDays,exercisesData)
       setUserData(newDataDays)
       setUserExertion(newExertion)
+      logUserData(userId,date,activity,data)
 
   };
 
