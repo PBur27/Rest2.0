@@ -6,14 +6,15 @@ export async function logUserData(userId, date, activity, data) {
     console.warn("Error adding data to db: no data to add");
     return;
   }
-
+  const strDate = date.toISOString()
+  console.log(userId,date,activity,data)
   //date,activity,data
-  const docRef = doc(db, "users", userId, "days", date);
+  const docRef = doc(db, "users", userId, "days", strDate);
 
   await setDoc(
     docRef,
     {
-      date,
+      date: strDate,
       [activity]: [...data],  
     },
     { merge: true }

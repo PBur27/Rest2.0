@@ -18,9 +18,9 @@ export default function ActivityScreen() {
   const exercisesData = useExercisesData()
   const userId = useUser()
 
-  const [date, setDate] = useState(null)
-  const [activity, setActivity] = useState(null)
-  const [data, setData] = useState(null)
+  const [date, setDate] = useState(new Date())
+  const [activity, setActivity] = useState('workout')
+  const [data, setData] = useState([])
 
   const saveActivity = async () => {
     const isSameDay = (d1, d2) =>
@@ -51,6 +51,7 @@ export default function ActivityScreen() {
       setUserData(newDataDays)
       setUserExertion(newExertion)
       logUserData(userId,date,activity,data)
+      setData([]) //clear data after saving
 
   };
 
