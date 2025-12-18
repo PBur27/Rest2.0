@@ -5,11 +5,15 @@ export async function fetchUserData(userId) {
   const userDataDaysRef = collection(db, "users", userId, "days");
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const sevenDaysAgo = new Date(today);
   sevenDaysAgo.setDate(today.getDate() - 7);
 
 
-  const userDaysDocs = await getDocs(query(userDataDaysRef, where('date', ">=", sevenDaysAgo))).docs
+  const snap = await getDocs(query(userDataDaysRef, where('date', ">=", sevenDaysAgo)))
+  const userDaysDocs = snap.docs
+  
 
 
   const dataDays = Array.from({ length: 7 }, (_, i) => ({
@@ -27,18 +31,21 @@ export async function fetchUserData(userId) {
 
   if (userDaysDocs) {
     userDaysDocs.forEach((doc) => {
-      const data = doc.data();
-      const docDate = data.date.toDate ? data.date.toDate() : data.date;
+      const docData = doc.data();
+      const docDate = docData.date.toDate();
       dataDays.forEach((day) => {
         if (isSameDay(day.date, docDate)) {
-          if (data.exercises) {
-            day.exercises = data.exercises
+          if (docData.workout) {
+            console.log(docData.workout)
+            day.exercises = docData.workout
           }
-          if (data.sleep) {
-            day.sleep = data.sleep
+          if (docData.sleep) {
+            console.log(docData.sleep)
+            day.sleep = docData.sleep
           }
-          if (data.diet) {
-            day.diet = data.diet
+          if (docData.diet) {
+            console.log(docData.diet)
+            day.diet = docData.diet
           }
         }
       });
@@ -47,9 +54,6 @@ export async function fetchUserData(userId) {
   else {
     console.log("fetchUserData - no data found")
   }
-
-
-
-
+  console.log("Fetched user data days:", dataDays);
   return dataDays;
 }

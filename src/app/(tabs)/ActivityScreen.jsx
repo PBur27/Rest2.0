@@ -9,7 +9,8 @@ import { calculateExertion } from "../../firebase/calculateExertion";
 import { logUserData } from "../../firebase/logUserData";
 import { useExercisesData, useSetUserData, useSetUserExertion, useUser, useUserData } from "../UserDataContext";
 
-export default function ActivityScreen() {
+
+export default function ActivityScreen({route}) {
   //context data setters
   const setUserData = useSetUserData();
   const setUserExertion = useSetUserExertion();

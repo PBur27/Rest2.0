@@ -8,11 +8,8 @@ import {
 } from "react-native";
 import CustomText from "../CustomText";
 
-
-
 export default function HistoryDayEditModal({ isVisible, onClose, data }) {
-
-  console.log(data)
+  console.log(data);
   return (
     <Modal
       visible={isVisible}
@@ -25,23 +22,22 @@ export default function HistoryDayEditModal({ isVisible, onClose, data }) {
         activeOpacity={1}
         onPressOut={onClose} // close on background press
       >
-        <TouchableWithoutFeedback onPress={() => { }}>
+        <TouchableWithoutFeedback onPress={() => {}}>
           <View style={styles.modalContent}>
             <Pressable style={styles.entryChoice}>
               <CustomText style={styles.entryChoiceText}>Workout</CustomText>
+              
             </Pressable>
             <Pressable style={styles.entryChoice}>
-              <CustomText style={styles.entryChoiceText}>Workout</CustomText>
+              <CustomText style={styles.entryChoiceText}>Diet</CustomText>
             </Pressable>
             <Pressable style={styles.entryChoice}>
-              <CustomText style={styles.entryChoiceText}>Workout</CustomText>
+              <CustomText style={styles.entryChoiceText}>Sleep</CustomText>
             </Pressable>
-
-
           </View>
         </TouchableWithoutFeedback>
       </TouchableOpacity>
-    </Modal >
+    </Modal>
   );
 }
 
@@ -59,15 +55,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
-    gap:20,
-    padding:20
+    gap: 20,
+    padding: 20,
   },
   entryChoice: {
     flex: 1,
     width: "80%",
-    backgroundColor: "#8C7871"
+    backgroundColor: "#8C7871",
+    paddingHorizontal: 10,
+    borderRadius: 10,
   },
   entryChoiceText: {
-    color: "#FBF1E6"
-  }
+    color: "#FBF1E6",
+  },
 });

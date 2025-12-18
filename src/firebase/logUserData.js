@@ -14,7 +14,7 @@ export async function logUserData(userId, date, activity, data) {
   await setDoc(
     docRef,
     {
-      date: strDate,
+      date: date,
       [activity]: [...data],  
     },
     { merge: true }
