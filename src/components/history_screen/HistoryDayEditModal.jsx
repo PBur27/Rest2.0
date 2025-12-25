@@ -1,37 +1,61 @@
+import { router } from "expo-router";
 import {
   Modal,
   Pressable,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import CustomText from "../CustomText";
 
 export default function HistoryDayEditModal({ isVisible, onClose, data }) {
-  console.log(data);
+  const redirectToActivityEdit = (activityType) => {
+    const date = data.date;
+    router.push({
+      pathname: "/(tabs)/ActivityScreen",
+      params: {
+        editMode: "true",
+        activityType,
+        date
+      },
+    });
+
+    onClose();
+  };
+
   return (
     <Modal
       visible={isVisible}
-      transparent={true}
+      transparent
       animationType="fade"
       onRequestClose={onClose}
     >
       <TouchableOpacity
         style={styles.overlay}
         activeOpacity={1}
-        onPressOut={onClose} // close on background press
+        onPressOut={onClose}
       >
-        <TouchableWithoutFeedback onPress={() => {}}>
+        <TouchableWithoutFeedback>
           <View style={styles.modalContent}>
-            <Pressable style={styles.entryChoice}>
+            <Pressable
+              style={styles.entryChoice}
+              onPress={() => redirectToActivityEdit("workout")}
+            >
               <CustomText style={styles.entryChoiceText}>Workout</CustomText>
-              
             </Pressable>
-            <Pressable style={styles.entryChoice}>
+
+            <Pressable
+              style={styles.entryChoice}
+              onPress={() => redirectToActivityEdit("diet")}
+            >
               <CustomText style={styles.entryChoiceText}>Diet</CustomText>
             </Pressable>
-            <Pressable style={styles.entryChoice}>
+
+            <Pressable
+              style={styles.entryChoice}
+              onPress={() => redirectToActivityEdit("sleep")}
+            >
               <CustomText style={styles.entryChoiceText}>Sleep</CustomText>
             </Pressable>
           </View>
@@ -41,6 +65,7 @@ export default function HistoryDayEditModal({ isVisible, onClose, data }) {
   );
 }
 
+
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
@@ -49,8 +74,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContent: {
-    width: "70%",
-    height: "50%",
+    width: "60%",
+    height: "40%",
     backgroundColor: "#FBF1E6",
     justifyContent: "center",
     alignItems: "center",
@@ -67,5 +92,9 @@ const styles = StyleSheet.create({
   },
   entryChoiceText: {
     color: "#FBF1E6",
+    height: "100%",
+    width: "100%",
+    fontSize: 20,
+    textAlignVertical: "center",
   },
 });
