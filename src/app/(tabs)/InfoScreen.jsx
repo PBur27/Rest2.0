@@ -15,7 +15,9 @@ export default function InfoScreen() {
         <CustomText >Info</CustomText>
       </View>
       <View style={[styles.container, { flex: 13 }]}>
-
+        {/*Once per day user can request advice from an ai assistant:
+        - The screen should have a large button and sufficient place to generate and display the response
+        - The date of last request should be stored using asyncstorage and analyzed in the backend file*/}
       </View>
     </SafeAreaView>
   );
