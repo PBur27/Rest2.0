@@ -30,7 +30,6 @@ export default function ActivityScreen() {
   const exercisesData = useExercisesData();
   const userId = useUser();
 
-  // Declare state at component level (not in if/else)
   const [date, setDate] = useState(new Date());
   const [activity, setActivity] = useState("workout");
   const [data, setData] = useState([]);
@@ -39,8 +38,8 @@ export default function ActivityScreen() {
     d1.getFullYear() === d2.getFullYear() &&
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate();
-  
-  // Update state if in edit mode
+
+  // update state if in edit mode
   useEffect(() => {
     const findDayData = (days, date, type) => {
       for (const day of days) {
@@ -55,7 +54,7 @@ export default function ActivityScreen() {
         "Editing ",
         editedActivityType,
         " data for ",
-        editedActivityDate
+        editedActivityDate,
       );
       setDate(new Date(editedActivityDate));
       setActivity(editedActivityType);
@@ -64,7 +63,7 @@ export default function ActivityScreen() {
         const dayData = findDayData(
           dataDays,
           new Date(editedActivityDate),
-          "exercises"
+          "exercises",
         );
         console.log(dayData);
         setData(dayData);
@@ -72,7 +71,7 @@ export default function ActivityScreen() {
         const dayData = findDayData(
           dataDays,
           new Date(editedActivityDate),
-          "diet"
+          "diet",
         );
         setData(dayData);
         console.log(dayData);
@@ -80,7 +79,7 @@ export default function ActivityScreen() {
         const dayData = findDayData(
           dataDays,
           new Date(editedActivityDate),
-          "sleep"
+          "sleep",
         );
         const normalized = dayData.map((d) => ({
           ...d,
@@ -121,15 +120,21 @@ export default function ActivityScreen() {
   return (
     <SafeAreaView style={styles.backgroundContainer} edges={["top"]}>
       <TopBar display="Add Data" />
-      <ActivityPicker activity={activity} setActivity={setActivity} setData={setData} />
-      <ActivityDateTime activity={activity} date={date} setDate={setDate} />
-      <View style={[styles.contentContainer, { flex: 11 }]}>
-        <ActivityEntries
+      <View style={{ flex: 13, backgroundColor: "#FBF1E6" }}>
+        <ActivityPicker
           activity={activity}
-          data={data}
+          setActivity={setActivity}
           setData={setData}
-          saveActivity={saveActivity}
-        ></ActivityEntries>
+        />
+        <ActivityDateTime activity={activity} date={date} setDate={setDate} />
+        <View style={[styles.contentContainer, { flex: 11 }]}>
+          <ActivityEntries
+            activity={activity}
+            data={data}
+            setData={setData}
+            saveActivity={saveActivity}
+          ></ActivityEntries>
+        </View>
       </View>
     </SafeAreaView>
   );
