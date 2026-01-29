@@ -10,6 +10,7 @@ import {
 import CustomText from "../CustomText";
 
 export default function HistoryDayEditModal({ isVisible, onClose, data }) {
+  console.log(data);
   const redirectToActivityEdit = (activityType) => {
     const date = data.date;
     router.push({
@@ -17,7 +18,7 @@ export default function HistoryDayEditModal({ isVisible, onClose, data }) {
       params: {
         editMode: "true",
         activityType,
-        date
+        date,
       },
     });
 
@@ -64,7 +65,6 @@ export default function HistoryDayEditModal({ isVisible, onClose, data }) {
     </Modal>
   );
 }
-
 
 const styles = StyleSheet.create({
   overlay: {

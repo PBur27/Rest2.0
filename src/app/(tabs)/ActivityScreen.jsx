@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ActivityDateTime from "../../components/activity_screen/ActivityDateTime";
@@ -17,11 +17,9 @@ import {
 } from "../UserDataContext";
 
 export default function ActivityScreen() {
-  //load data if user was redirected here from history screen
+  //load date if user was redirected here from history screen
   const params = useLocalSearchParams();
-  const editMode = params.editMode;
-  const editedActivityType = params.activityType;
-  const editedActivityDate = params.date;
+  const initialDate = params.date;
   //context data setters
   const setUserData = useSetUserData();
   const setUserExertion = useSetUserExertion();
@@ -32,64 +30,12 @@ export default function ActivityScreen() {
 
   const [date, setDate] = useState(new Date());
   const [activity, setActivity] = useState("workout");
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(dataDays);
 
   const isSameDay = (d1, d2) =>
     d1.getFullYear() === d2.getFullYear() &&
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate();
-
-  // update state if in edit mode
-  useEffect(() => {
-    const findDayData = (days, date, type) => {
-      for (const day of days) {
-        if (isSameDay(day.date, date)) {
-          return day[type];
-        }
-      }
-    };
-
-    if (editMode === "true") {
-      console.log(
-        "Editing ",
-        editedActivityType,
-        " data for ",
-        editedActivityDate,
-      );
-      setDate(new Date(editedActivityDate));
-      setActivity(editedActivityType);
-
-      if (editedActivityType === "workout") {
-        const dayData = findDayData(
-          dataDays,
-          new Date(editedActivityDate),
-          "exercises",
-        );
-        console.log(dayData);
-        setData(dayData);
-      } else if (editedActivityType === "diet") {
-        const dayData = findDayData(
-          dataDays,
-          new Date(editedActivityDate),
-          "diet",
-        );
-        setData(dayData);
-        console.log(dayData);
-      } else if (editedActivityType === "sleep") {
-        const dayData = findDayData(
-          dataDays,
-          new Date(editedActivityDate),
-          "sleep",
-        );
-        const normalized = dayData.map((d) => ({
-          ...d,
-          bedtime: d.bedtime.toDate(),
-        }));
-
-        setData(normalized);
-      }
-    }
-  }, []);
 
   const saveActivity = async () => {
     //clone state to avoid state variable mutation

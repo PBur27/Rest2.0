@@ -1,25 +1,24 @@
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../../components/TopBar";
+import HistoryDayEditModal from "../../components/history_screen/HistoryDayEditModal";
 import HistoryDays from "../../components/history_screen/HistoryDays";
 import { useUserData } from "../UserDataContext";
-import HistoryDayEditModal from "../../components/history_screen/HistoryDayEditModal";
-import { useState } from "react";
-
-
 
 export default function HistoryScreen() {
+  //userData from context
   const userData = useUserData();
-  const [modalVisible, setModalVisible] = useState(false)
-  const [modalData, setmodalData] = useState(null)
+  console.log(userData);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalData, setmodalData] = useState(null);
   const closeModal = () => {
-    setModalVisible(false)
-  }
+    setModalVisible(false);
+  };
   const openModal = (data) => {
-    setmodalData(data)
-    setModalVisible(true)
-  }
-  
+    setmodalData(data);
+    setModalVisible(true);
+  };
 
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
@@ -27,12 +26,14 @@ export default function HistoryScreen() {
       <View style={[styles.container, { flex: 13 }]}>
         <HistoryDays userData={userData} openModal={openModal} />
       </View>
-      <HistoryDayEditModal isVisible={modalVisible} onClose={closeModal} data={modalData}/>
+      <HistoryDayEditModal
+        isVisible={modalVisible}
+        onClose={closeModal}
+        data={modalData}
+      />
     </SafeAreaView>
   );
-};
-
-
+}
 
 const styles = StyleSheet.create({
   background: {
@@ -56,4 +57,4 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     backgroundColor: "#FBF1E6",
   },
-})
+});

@@ -16,6 +16,9 @@ export default function ActivityEntries({
   setData,
   saveActivity,
 }) {
+  // data is an array of entries for the selected activity type
+  // activity used for displaying correct fields
+
   const [modalVisible, setModalVisible] = React.useState(false);
   const addEntry = () => {
     setModalVisible(true);
