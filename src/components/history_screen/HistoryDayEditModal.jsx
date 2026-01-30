@@ -10,13 +10,12 @@ import {
 import CustomText from "../CustomText";
 
 export default function HistoryDayEditModal({ isVisible, onClose, data }) {
-  console.log(data);
+  console.log(data.date);
   const redirectToActivityEdit = (activityType) => {
-    const date = data.date;
+    const date = data.date.toLocaleDateString('en-CA');
     router.push({
       pathname: "/(tabs)/ActivityScreen",
       params: {
-        editMode: "true",
         activityType,
         date,
       },

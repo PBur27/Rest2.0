@@ -46,7 +46,6 @@ export async function fetchUserData(userId) {
       const docDate = docData.date.toDate().toLocaleDateString("en-CA");
 
       if (dataDaysObj[docDate]) {
-        // Direct assignment - O(1) speed
         if (docData.workout) dataDays[docDate].exercises = docData.workout;
         if (docData.sleep) dataDays[docDate].sleep = docData.sleep;
         if (docData.diet) dataDays[docDate].diet = docData.diet;

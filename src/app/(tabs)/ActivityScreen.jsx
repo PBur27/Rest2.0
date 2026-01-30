@@ -19,7 +19,8 @@ import {
 export default function ActivityScreen() {
   //load date if user was redirected here from history screen
   const params = useLocalSearchParams();
-  const initialDate = params.date;
+  const initialDateLocaleString = params.date;
+  const initialActivity = params.activityType
   //context data setters
   const setUserData = useSetUserData();
   const setUserExertion = useSetUserExertion();
@@ -28,8 +29,8 @@ export default function ActivityScreen() {
   const exercisesData = useExercisesData();
   const userId = useUser();
 
-  const [date, setDate] = useState(new Date());
-  const [activity, setActivity] = useState("workout");
+  const [date, setDate] = useState(initialDateLocaleString ? new Date(initialDateLocaleString) : new Date());
+  const [activity, setActivity] = useState(activityType ? activityType : "workout");
   const [data, setData] = useState(dataDays);
 
   const isSameDay = (d1, d2) =>
