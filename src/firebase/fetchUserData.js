@@ -46,9 +46,10 @@ export async function fetchUserData(userId) {
       const docDate = docData.date.toDate().toLocaleDateString("en-CA");
 
       if (dataDaysObj[docDate]) {
-        if (docData.workout) dataDays[docDate].exercises = docData.workout;
-        if (docData.sleep) dataDays[docDate].sleep = docData.sleep;
-        if (docData.diet) dataDays[docDate].diet = docData.diet;
+        if (docData.exercises)
+          dataDaysObj[docDate].exercises = docData.exercises;
+        if (docData.sleep) dataDaysObj[docDate].sleep = docData.sleep;
+        if (docData.diet) dataDaysObj[docDate].diet = docData.diet;
       }
     });
   } else {

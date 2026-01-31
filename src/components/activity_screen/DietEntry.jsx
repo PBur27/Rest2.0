@@ -20,7 +20,7 @@ export default function DietEntry({ data, setData, closeModal }) {
       return;
     }
     const newEntry = {
-      id: new Date().toISOString(),
+      id: crypto.randomUUID(),
       calories: calories,
       protein: protein,
     };

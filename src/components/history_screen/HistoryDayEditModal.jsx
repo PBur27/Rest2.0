@@ -10,9 +10,12 @@ import {
 import CustomText from "../CustomText";
 
 export default function HistoryDayEditModal({ isVisible, onClose, data }) {
-  console.log(data.date);
+  //isVisible - boolean to show/hide modal
+  //onClose - function to close modal
+  //data - data of the day to edit - single dict with JS date object and arrays of activities by type
   const redirectToActivityEdit = (activityType) => {
-    const date = data.date.toLocaleDateString('en-CA');
+    //convert date to string in format YYYY-MM-DD
+    const date = data.date.toLocaleDateString("en-CA");
     router.push({
       pathname: "/(tabs)/ActivityScreen",
       params: {
@@ -40,9 +43,9 @@ export default function HistoryDayEditModal({ isVisible, onClose, data }) {
           <View style={styles.modalContent}>
             <Pressable
               style={styles.entryChoice}
-              onPress={() => redirectToActivityEdit("workout")}
+              onPress={() => redirectToActivityEdit("exercises")}
             >
-              <CustomText style={styles.entryChoiceText}>Workout</CustomText>
+              <CustomText style={styles.entryChoiceText}>Exercises</CustomText>
             </Pressable>
 
             <Pressable

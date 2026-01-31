@@ -29,7 +29,7 @@ export default function SleepEntry({ data, closeModal, setData }) {
     }
 
     const newEntry = {
-      id: new Date().toISOString(),
+      id: crypto.randomUUID(),
       bedtime: bedtime,
       sleepHours: sleepHours,
     };

@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ActivityDateTime from "../../components/activity_screen/ActivityDateTime";
@@ -20,7 +20,7 @@ export default function ActivityScreen() {
   //load date if user was redirected here from history screen
   const params = useLocalSearchParams();
   const initialDateLocaleString = params.date;
-  const initialActivity = params.activityType
+  const initialActivity = params.activityType;
   //context data setters
   const setUserData = useSetUserData();
   const setUserExertion = useSetUserExertion();
@@ -29,39 +29,80 @@ export default function ActivityScreen() {
   const exercisesData = useExercisesData();
   const userId = useUser();
 
-  const [date, setDate] = useState(initialDateLocaleString ? new Date(initialDateLocaleString) : new Date());
-  const [activity, setActivity] = useState(activityType ? activityType : "workout");
-  const [data, setData] = useState(dataDays);
-
+  //helper function to find day by date
   const isSameDay = (d1, d2) =>
     d1.getFullYear() === d2.getFullYear() &&
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate();
+  //helper function to return day data by date
+  const returnDayByDate = (date) => {
+    for (const day of dataDays) {
+      if (isSameDay(day.date, date)) {
+        return day;
+      }
+    }
+    console.log("ActivityScreen: no day found");
+    return null;
+  };
+
+  const [date, setDate] = useState(
+    initialDateLocaleString ? new Date(initialDateLocaleString) : new Date(),
+  );
+  const [activity, setActivity] = useState(
+    initialActivity ? initialActivity : "exercises",
+  );
+  //find data from correct day and activity
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const day = returnDayByDate(date);
+    setData(day?.[activity] ?? []);
+  }, [date, activity]);
+
+  console.log(
+    "ActivityScreen: loading data:",
+    returnDayByDate(date)?.[activity],
+    "for date:",
+    date,
+    "actual data:",
+    data,
+  );
+
+  useEffect(() => {
+    if (params.date) {
+      setDate(new Date(params.date));
+    }
+    if (params.activityType) {
+      setActivity(params.activityType);
+    }
+  }, [params.date, params.activityType]);
 
   const saveActivity = async () => {
-    //clone state to avoid state variable mutation
     const newDataDays = structuredClone(dataDays);
 
-    //add data to selected day
+    const mergeById = (existing = [], incoming = []) => {
+      const ids = new Set(existing.map((item) => item.id));
+      return [...existing, ...incoming.filter((item) => !ids.has(item.id))];
+    };
+
     for (const day of newDataDays) {
-      if (isSameDay(day.date, date)) {
-        if (activity == "workout") {
-          day.exercises.push(...data);
-        } else if (activity == "diet") {
-          day.diet.push(...data);
-        }
-        if (activity == "sleep") {
-          day.sleep.push(...data);
-        }
+      if (!isSameDay(day.date, date)) continue;
+
+      if (activity === "exercises") {
+        day.exercises = mergeById(day.exercises, data);
+      } else if (activity === "diet") {
+        day.diet = mergeById(day.diet, data);
+      } else if (activity === "sleep") {
+        day.sleep = mergeById(day.sleep, data);
       }
     }
 
-    // overlay would be good while these 3 are running
     const newExertion = calculateExertion(newDataDays, exercisesData);
+
     setUserData(newDataDays);
     setUserExertion(newExertion);
-    logUserData(userId, date, activity, data);
-    setData([]); //clear data after saving
+    await logUserData(userId, date, activity, data);
+    setData([]);
   };
 
   return (

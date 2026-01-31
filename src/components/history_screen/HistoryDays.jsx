@@ -1,34 +1,35 @@
-import { FlatList, StyleSheet } from 'react-native';
-import HistoryDayOverviewPressable from './HistoryDayOverviewPressable';
+import { FlatList, StyleSheet } from "react-native";
+import HistoryDayOverviewPressable from "./HistoryDayOverviewPressable";
 
-export default function HistoryDays({ userData, openModal }) {
-    
+export default function HistoryDays({ userData, openModalAndSetData }) {
+  const sortedData = [...userData].sort((a, b) => {
+    return b.date - a.date;
+  });
 
-    const sortedData = [...userData].sort((a, b) => {
-        return b.date - a.date;
-    });
-
-    return (
-        <FlatList
-        
-        style={styles.container}
-            contentContainerStyle={styles.listContainer}
-            data={sortedData}
-            renderItem={({ item }) => <HistoryDayOverviewPressable data={item} openModal={openModal}/>}
+  return (
+    <FlatList
+      style={styles.container}
+      contentContainerStyle={styles.listContainer}
+      data={sortedData}
+      renderItem={({ item }) => (
+        <HistoryDayOverviewPressable
+          data={item}
+          openModalAndSetData={openModalAndSetData}
         />
-
-    )
+      )}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        width:"100%"
-    },
-    listContainer: {
-        alignSelf:"center",
-        flex: 1,
-        width: "90%",
-        justifyContent: "space-evenly"
-    }
-})
+  container: {
+    flex: 1,
+    width: "100%",
+  },
+  listContainer: {
+    alignSelf: "center",
+    flex: 1,
+    width: "90%",
+    justifyContent: "space-evenly",
+  },
+});

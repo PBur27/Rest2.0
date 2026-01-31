@@ -12,7 +12,6 @@ import {
 import CustomText from "../CustomText";
 
 export default function ExerciseEntry({ data, setData, closeModal }) {
-
   //to be replaced by database exercise loading
   const baseExercises = [
     { id: "1", name: "Push Ups" },
@@ -30,8 +29,8 @@ export default function ExerciseEntry({ data, setData, closeModal }) {
   const handleSearch = (text) => {
     setExercises(
       baseExercises.filter((exercise) =>
-        exercise.name.toLowerCase().includes(text.toLowerCase())
-      )
+        exercise.name.toLowerCase().includes(text.toLowerCase()),
+      ),
     );
   };
 
@@ -53,7 +52,7 @@ export default function ExerciseEntry({ data, setData, closeModal }) {
     }
 
     const newEntry = {
-      id: new Date().toISOString(),
+      id: crypto.randomUUID(),
       //exercise name taken from search bar
       name: search,
       //numver between 1-10
@@ -61,10 +60,9 @@ export default function ExerciseEntry({ data, setData, closeModal }) {
     };
 
     //data array updated by adding the new entry to existing ones
-    const newData = [...data, newEntry]
+    const newData = [...data, newEntry];
     //send data to the parent component
-    setData(newData)
-
+    setData(newData);
 
     closeModal();
   };
@@ -133,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FBF1E6",
     padding: 10,
     borderRadius: 10,
-    gap: 10
+    gap: 10,
   },
   header: {
     flex: 1,

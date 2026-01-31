@@ -9,14 +9,19 @@ import { useUserData } from "../UserDataContext";
 export default function HistoryScreen() {
   //userData from context
   const userData = useUserData();
-  console.log(userData);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setmodalData] = useState(null);
   const closeModal = () => {
     setModalVisible(false);
   };
-  const openModal = (data) => {
+  const openModalAndSetData = (data) => {
     setmodalData(data);
+    console.log(
+      "History Screen - opening modal for date: ",
+      data.date,
+      "with data: ",
+      data,
+    );
     setModalVisible(true);
   };
 
@@ -24,7 +29,10 @@ export default function HistoryScreen() {
     <SafeAreaView style={styles.background} edges={["top"]}>
       <TopBar display={"History"} />
       <View style={[styles.container, { flex: 13 }]}>
-        <HistoryDays userData={userData} openModal={openModal} />
+        <HistoryDays
+          userData={userData}
+          openModalAndSetData={openModalAndSetData}
+        />
       </View>
       <HistoryDayEditModal
         isVisible={modalVisible}

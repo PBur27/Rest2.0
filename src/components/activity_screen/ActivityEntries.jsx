@@ -29,7 +29,7 @@ export default function ActivityEntries({
 
   let headerTextLeft, headerTextRight;
 
-  if (activity == "workout") {
+  if (activity == "exercises") {
     headerTextLeft = "exercise";
     headerTextRight = "intensity";
   } else if (activity == "sleep") {
@@ -69,7 +69,7 @@ export default function ActivityEntries({
             renderItem={({ item }) => (
               <Pressable onPress={() => handleDelete(item)}>
                 <View style={styles.entryRow}>
-                  {activity === "workout" ? (
+                  {activity === "exercises" ? (
                     <>
                       <CustomText style={styles.entryText}>
                         {item.name}

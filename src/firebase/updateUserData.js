@@ -10,7 +10,7 @@ export function updateData(entry, days) {
   for (const day of days) {
     if (!isSameDay(day.date, entry.dateTime)) continue;
 
-    if (entry.activity === "workout") {
+    if (entry.activity === "exercises") {
       for (const ex of entry.data)
         day.exercises.push({
           exerciseDocRef: doc(db, "exercises", ex.name),
