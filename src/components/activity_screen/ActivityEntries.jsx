@@ -103,20 +103,9 @@ export default function ActivityEntries({
           />
         </View>
         <View style={styles.buttonContainer}>
-          {!data || data.length === 0 ? (
-            <TouchableOpacity style={styles.button} onPress={addEntry}>
-              <Ionicons name="add" size={80} color="#FBF1E6" />
-            </TouchableOpacity>
-          ) : (
-            <>
-              <TouchableOpacity style={styles.button} onPress={addEntry}>
-                <Ionicons name="add" size={80} color="#FBF1E6" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={saveActivity}>
-                <Ionicons name="checkmark" size={80} color="#FBF1E6" />
-              </TouchableOpacity>
-            </>
-          )}
+          <TouchableOpacity style={styles.button} onPress={addEntry}>
+            <Ionicons name="add" size={80} color="#FBF1E6" />
+          </TouchableOpacity>
         </View>
       </View>
       <AddEntryModal
@@ -125,6 +114,7 @@ export default function ActivityEntries({
         activity={activity}
         data={data}
         setData={setData}
+        saveActivity={saveActivity}
       />
     </>
   );

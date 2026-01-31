@@ -2,7 +2,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "./firebaseApp";
 
 export async function logUserData(userId, date, activity, data) {
-  if (!data || data.length === 0) {
+  if (!data) {
     console.warn("Error adding data to db: no data to add");
     return;
   }

@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import {
   FlatList,
@@ -52,7 +53,7 @@ export default function ExerciseEntry({ data, setData, closeModal }) {
     }
 
     const newEntry = {
-      id: crypto.randomUUID(),
+      id: Timestamp.now().seconds.toString(),
       //exercise name taken from search bar
       name: search,
       //numver between 1-10

@@ -76,6 +76,7 @@ export default function ActivityScreen() {
       setActivity(params.activityType);
     }
   }, [params.date, params.activityType]);
+  
 
   const saveActivity = async () => {
     const newDataDays = structuredClone(dataDays);
@@ -102,8 +103,12 @@ export default function ActivityScreen() {
     setUserData(newDataDays);
     setUserExertion(newExertion);
     await logUserData(userId, date, activity, data);
-    setData([]);
   };
+
+  useEffect(() => {
+    saveActivity();
+  },[data])
+
 
   return (
     <SafeAreaView style={styles.backgroundContainer} edges={["top"]}>
