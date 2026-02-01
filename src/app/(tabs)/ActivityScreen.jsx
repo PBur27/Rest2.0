@@ -111,7 +111,7 @@ export default function ActivityScreen() {
 
     setUserData(newDataDays);
     setUserExertion(newExertion);
-    await logUserData(userId, date, activity, data);
+    logUserData(userId, date, activity, data);
   };
 
   useEffect(() => {
