@@ -1,4 +1,5 @@
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import {
   Keyboard,
@@ -29,7 +30,7 @@ export default function SleepEntry({ data, closeModal, setData }) {
     }
 
     const newEntry = {
-      id: crypto.randomUUID(),
+      id: Timestamp.now().seconds.toString(),
       bedtime: bedtime,
       sleepHours: sleepHours,
     };

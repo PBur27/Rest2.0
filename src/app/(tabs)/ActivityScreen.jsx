@@ -45,9 +45,17 @@ export default function ActivityScreen() {
     return null;
   };
 
-  const [date, setDate] = useState(
-    initialDateLocaleString ? new Date(initialDateLocaleString) : new Date(),
-  );
+  //function to correctly set date if loaded from params (History Screen)
+  const [date, setDate] = useState(() => {
+    if (initialDateLocaleString) {
+      return new Date(initialDateLocaleString);
+    }
+
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
+
   const [activity, setActivity] = useState(
     initialActivity ? initialActivity : "exercises",
   );
@@ -76,7 +84,6 @@ export default function ActivityScreen() {
       setActivity(params.activityType);
     }
   }, [params.date, params.activityType]);
-  
 
   const saveActivity = async () => {
     const newDataDays = structuredClone(dataDays);
@@ -86,16 +93,18 @@ export default function ActivityScreen() {
       return [...existing, ...incoming.filter((item) => !ids.has(item.id))];
     };
 
-    for (const day of newDataDays) {
-      if (!isSameDay(day.date, date)) continue;
+    let day = newDataDays.find((d) => isSameDay(d.date, date));
+    if (!day) {
+      day = { date, exercises: [], diet: [], sleep: [] };
+      newDataDays.push(day);
+    }
 
-      if (activity === "exercises") {
-        day.exercises = mergeById(day.exercises, data);
-      } else if (activity === "diet") {
-        day.diet = mergeById(day.diet, data);
-      } else if (activity === "sleep") {
-        day.sleep = mergeById(day.sleep, data);
-      }
+    if (activity === "exercises") {
+      day.exercises = mergeById(day.exercises, data);
+    } else if (activity === "diet") {
+      day.diet = mergeById(day.diet, data);
+    } else if (activity === "sleep") {
+      day.sleep = mergeById(day.sleep, data);
     }
 
     const newExertion = calculateExertion(newDataDays, exercisesData);
@@ -107,8 +116,7 @@ export default function ActivityScreen() {
 
   useEffect(() => {
     saveActivity();
-  },[data])
-
+  }, [data]);
 
   return (
     <SafeAreaView style={styles.backgroundContainer} edges={["top"]}>

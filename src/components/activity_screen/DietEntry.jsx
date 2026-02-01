@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import {
   Keyboard,
@@ -20,7 +21,7 @@ export default function DietEntry({ data, setData, closeModal }) {
       return;
     }
     const newEntry = {
-      id: crypto.randomUUID(),
+      id: Timestamp.now().seconds.toString(),
       calories: calories,
       protein: protein,
     };
