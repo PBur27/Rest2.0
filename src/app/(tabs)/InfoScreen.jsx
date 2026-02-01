@@ -9,9 +9,18 @@ export default function InfoScreen() {
     <SafeAreaView style={styles.background} edges={["top"]}>
       <TopBar display="Info" />
       <View style={[styles.container, { flex: 13 }]}>
-        {/*Once per day user can request advice from an ai assistant:
-        - The screen should have a large button and sufficient place to generate and display the response
-        - The date of last request should be stored using asyncstorage and analyzed in the backend file*/}
+        {
+          {
+            /*
+
+          INFO SCREEN
+          - display user's data and settings
+          - stats over time from the last 7? days
+          - goal completion levels
+          
+          */
+          }
+        }
       </View>
     </SafeAreaView>
   );
