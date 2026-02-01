@@ -17,7 +17,7 @@ export default function InfoScreen() {
           - display user's data and settings
           - stats over time from the last 7? days
           - goal completion levels
-          
+          - python generated data visualizations?
           */
           }
         }
