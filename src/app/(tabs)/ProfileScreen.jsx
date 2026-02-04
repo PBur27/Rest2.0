@@ -4,23 +4,17 @@ import CustomText from "../../components/CustomText";
 import TopBar from "../../components/TopBar";
 import { useUser } from "../UserDataContext";
 
-
-
 export default function ProfileScreen() {
   const userId = useUser();
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
-      <TopBar display={"Account"}/>
+      <TopBar display={"Account"} />
       <View style={[styles.container, { flex: 13 }]}>
-
         <CustomText>User Id: {userId}</CustomText>
-
       </View>
     </SafeAreaView>
   );
-};
-
-
+}
 
 const styles = StyleSheet.create({
   background: {
@@ -44,4 +38,4 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     backgroundColor: "#FBF1E6",
   },
-})
+});

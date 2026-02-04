@@ -8,8 +8,8 @@ export default function TopBar({ display }) {
     <View style={styles.topBar}>
       <SmallLogo />
       {display === "battery" ? (
-        <BatteryIcon/>
-      ):(
+        <BatteryIcon />
+      ) : (
         <CustomText>{display}</CustomText>
       )}
     </View>
