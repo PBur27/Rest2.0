@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { BodyParts } from "./BodyParts";
+import { BodyPartsBack } from "./BodyPartsBack";
+import { BodyPartsFront } from "./BodyPartsFront";
 
 export default function BodyImage({ organism }) {
   const [front, setFront] = useState(true);
+
+  organism = organism || { front: {}, back: {} };
+  console.log(organism.back);
 
   const exertion = {
     0: "#8C7871",
@@ -13,13 +17,27 @@ export default function BodyImage({ organism }) {
   };
 
   return (
-    <ScrollView>
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ width: "200%" }}
+      horizontal={true}
+      pagingEnabled={true}
+    >
       <View style={styles.bodyContainer}>
-        {Object.entries(BodyParts).map(([name, Part]) => (
+        {Object.entries(BodyPartsFront).map(([name, Part]) => (
           <Part
             key={name}
             style={styles.bodyPart}
-            fill={exertion[organism.front[name]] || "#8C7871"}
+            fill={exertion[organism.front?.[name]] || "#8C7871"}
+          />
+        ))}
+      </View>
+      <View style={styles.bodyContainer}>
+        {Object.entries(BodyPartsBack).map(([name, Part]) => (
+          <Part
+            key={name}
+            style={styles.bodyPart}
+            fill={exertion[organism.back?.[name]] || "#8C7871"}
           />
         ))}
       </View>
