@@ -1,9 +1,9 @@
-import { StyleSheet, View } from 'react-native';
-import { BodyParts } from './BodyParts';
+import { useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { BodyParts } from "./BodyParts";
 
-export default function BodyImage({organism}) {
-
-  
+export default function BodyImage({ organism }) {
+  const [front, setFront] = useState(true);
 
   const exertion = {
     0: "#8C7871",
@@ -13,15 +13,17 @@ export default function BodyImage({organism}) {
   };
 
   return (
-    <View style={styles.bodyContainer}>
-      {Object.entries(BodyParts).map(([name, Part]) => (
-        <Part
-          key={name}
-          style={styles.bodyPart}
-          fill={exertion[organism.front[name]] || "#8C7871"}
-        />
-      ))}
-    </View>
+    <ScrollView>
+      <View style={styles.bodyContainer}>
+        {Object.entries(BodyParts).map(([name, Part]) => (
+          <Part
+            key={name}
+            style={styles.bodyPart}
+            fill={exertion[organism.front[name]] || "#8C7871"}
+          />
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -29,10 +31,10 @@ const styles = StyleSheet.create({
   bodyContainer: {
     flex: 1,
     justifyContent: "flex-start",
-    alignItems: "center"
+    alignItems: "center",
   },
   bodyPart: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
   },
-})
+});
