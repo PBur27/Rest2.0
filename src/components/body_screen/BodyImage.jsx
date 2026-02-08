@@ -7,7 +7,6 @@ export default function BodyImage({ organism }) {
   const [front, setFront] = useState(true);
 
   organism = organism || { front: {}, back: {} };
-  console.log(organism.back);
 
   const exertion = {
     0: "#8C7871",

@@ -10,10 +10,10 @@ import { calculateExertion } from "../../firebase/calculateExertion";
 import { logUserData } from "../../firebase/logUserData";
 import {
   useExercisesData,
-  useSetUserData,
-  useSetUserExertion,
+  useSetUserDataDaysContext,
+  useSetUserExertionContext,
   useUser,
-  useUserData,
+  useUserDataDaysContext,
 } from "../UserDataContext";
 
 export default function ActivityScreen() {
@@ -22,10 +22,10 @@ export default function ActivityScreen() {
   const initialDateLocaleString = params.date;
   const initialActivity = params.activityType;
   //context data setters
-  const setUserData = useSetUserData();
-  const setUserExertion = useSetUserExertion();
+  const setUserDataDaysContext = useSetUserDataDaysContext();
+  const setUserExertionContext = useSetUserExertionContext();
   //userData from context
-  const dataDays = useUserData();
+  const dataDays = useUserDataDaysContext();
   const exercisesData = useExercisesData();
   const userId = useUser();
 
@@ -45,37 +45,35 @@ export default function ActivityScreen() {
     return null;
   };
 
-  //function to correctly set date if loaded from params (History Screen)
-  const [date, setDate] = useState(() => {
-    if (initialDateLocaleString) {
-      return new Date(initialDateLocaleString);
-    }
+  //date is set from params if they exist (History Screen), default is now
+  const [date, setDate] = useState(
+    initialDateLocaleString
+      ? new Date(initialDateLocaleString)
+      : new Date(new Date().setHours(0, 0, 0, 0)),
+  );
 
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
-  });
-
+  //activity is set from params if they exist (History Screen), default is exercises
   const [activity, setActivity] = useState(
     initialActivity ? initialActivity : "exercises",
   );
-  //find data from correct day and activity
-  const [data, setData] = useState([]);
+  //data is set based on activity and date, default is empty array
+  const [data, setData] = useState(() => {
+    const day = returnDayByDate(date);
+    return day?.[activity] ?? [];
+  });
 
   useEffect(() => {
     const day = returnDayByDate(date);
     setData(day?.[activity] ?? []);
   }, [date, activity]);
-
+  /*
   console.log(
     "ActivityScreen: loading data:",
     returnDayByDate(date)?.[activity],
     "for date:",
     date,
-    "actual data:",
-    data,
   );
-
+*/
   useEffect(() => {
     if (params.date) {
       setDate(new Date(params.date));
@@ -85,37 +83,42 @@ export default function ActivityScreen() {
     }
   }, [params.date, params.activityType]);
 
-  const saveActivity = async () => {
+  const saveActivity = async (data, activity, date) => {
     const newDataDays = structuredClone(dataDays);
 
-    const mergeById = (existing = [], incoming = []) => {
-      const ids = new Set(existing.map((item) => item.id));
-      return [...existing, ...incoming.filter((item) => !ids.has(item.id))];
+    const dataDaysChecker = (daysArray) => {
+      for (const dayObject of daysArray) {
+        console.log(dayObject);
+      }
     };
 
-    let day = newDataDays.find((d) => isSameDay(d.date, date));
-    if (!day) {
-      day = { date, exercises: [], diet: [], sleep: [] };
-      newDataDays.push(day);
+    /*
+    console.log("oldDataDays");
+    dataDaysChecker(newDataDays);
+    console.log("replacement:", data, date, activity);
+    */
+
+    for (const day of newDataDays) {
+      if (isSameDay(day.date, date)) {
+        day[activity] = data;
+        console.log("found matching day, replacing data with: ", day);
+        break;
+      }
     }
 
-    if (activity === "exercises") {
-      day.exercises = mergeById(day.exercises, data);
-    } else if (activity === "diet") {
-      day.diet = mergeById(day.diet, data);
-    } else if (activity === "sleep") {
-      day.sleep = mergeById(day.sleep, data);
-    }
+    /*
+    console.log("newDataDays");
+    dataDaysChecker(newDataDays);
+    */
+    const newExertion = await calculateExertion(newDataDays, exercisesData);
 
-    const newExertion = calculateExertion(newDataDays, exercisesData);
-
-    setUserData(newDataDays);
-    setUserExertion(newExertion);
+    setUserDataDaysContext(newDataDays);
+    setUserExertionContext(newExertion);
     logUserData(userId, date, activity, data);
   };
 
   useEffect(() => {
-    saveActivity();
+    saveActivity(data, activity, date);
   }, [data]);
 
   return (
@@ -133,7 +136,6 @@ export default function ActivityScreen() {
             activity={activity}
             data={data}
             setData={setData}
-            saveActivity={saveActivity}
           ></ActivityEntries>
         </View>
       </View>

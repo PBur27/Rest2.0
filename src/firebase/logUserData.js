@@ -7,7 +7,7 @@ export async function logUserData(userId, date, activity, data) {
     return;
   }
   const strDate = date.toISOString();
-  console.log(userId, date, activity, data);
+  console.log("LogUserData: ", userId, date, activity, data);
   //date,activity,data
   const docRef = doc(db, "users", userId, "days", strDate);
 

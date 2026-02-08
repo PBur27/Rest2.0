@@ -7,12 +7,17 @@ import { fetchExercisesData } from "../firebase/fetchExercisesData";
 import { fetchUserData } from "../firebase/fetchUserData";
 import { anonymousLogin } from "../firebase/loginOrRegister";
 import { styles } from "../styles/styles";
-import { useSetExercisesData, useSetUid, useSetUserData, useSetUserExertion } from "./UserDataContext";
+import {
+  useSetExercisesData,
+  useSetUid,
+  useSetUserDataDaysContext,
+  useSetUserExertionContext,
+} from "./UserDataContext";
 
 export default function Index() {
   const setUid = useSetUid();
-  const setUserData = useSetUserData();
-  const setExertionValues = useSetUserExertion();
+  const setUserData = useSetUserDataDaysContext();
+  const setExertionValues = useSetUserExertionContext();
   const setExercisesData = useSetExercisesData();
 
   useEffect(() => {
@@ -21,10 +26,10 @@ export default function Index() {
         const userId = await anonymousLogin();
         setUid(userId);
         const userData = await fetchUserData(userId);
-        setUserData(userData)
+        setUserData(userData);
         const exercisesData = await fetchExercisesData();
-        setExercisesData(exercisesData)
-        const exertionValues = calculateExertion(userData,exercisesData);
+        setExercisesData(exercisesData);
+        const exertionValues = await calculateExertion(userData, exercisesData);
         await setExertionValues(exertionValues);
         router.replace({ pathname: "/(tabs)/HomeScreen" });
       } catch (error) {

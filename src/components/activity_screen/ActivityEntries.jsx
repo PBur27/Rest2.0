@@ -10,12 +10,7 @@ import {
 import CustomText from "../CustomText";
 import AddEntryModal from "./AddEntryModal";
 
-export default function ActivityEntries({
-  activity,
-  data,
-  setData,
-  saveActivity,
-}) {
+export default function ActivityEntries({ activity, data, setData }) {
   // data is an array of entries for the selected activity type
   // activity used for displaying correct fields
 
@@ -24,6 +19,7 @@ export default function ActivityEntries({
     setModalVisible(true);
   };
   const handleDelete = (itemToDelete) => {
+    console.log("deleting item: ", itemToDelete);
     setData((data) => data.filter((item) => item !== itemToDelete));
   };
 
@@ -114,7 +110,6 @@ export default function ActivityEntries({
         activity={activity}
         data={data}
         setData={setData}
-        saveActivity={saveActivity}
       />
     </>
   );

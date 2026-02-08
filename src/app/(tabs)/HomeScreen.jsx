@@ -1,17 +1,25 @@
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BodyImage from "../../components/body_screen/BodyImage";
 import TopBar from "../../components/TopBar";
-import { useUserExertion } from "../UserDataContext";
+import { useUserExertionContext } from "../UserDataContext";
 
 export default function HomeScreen() {
-  const exertionValues = useUserExertion();
+  const exertionValues = useUserExertionContext();
+  const [displayValues, setDisplayValues] = useState(exertionValues);
+
+  //console.log(displayValues);
+
+  useEffect(() => {
+    setDisplayValues(exertionValues);
+  }, [exertionValues]);
 
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
       <TopBar display="battery" />
       <View style={[styles.container, { flex: 13 }]}>
-        <BodyImage organism={exertionValues} />
+        <BodyImage organism={displayValues} />
       </View>
     </SafeAreaView>
   );

@@ -3,10 +3,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { calculateCalories } from "../../components/info_screen/calculateCalories";
 import { calculateProtein } from "../../components/info_screen/calculateProtein";
 import TopBar from "../../components/TopBar";
-import { useUserData } from "../UserDataContext";
+import { useUserDataDaysContext } from "../UserDataContext";
 
 export default function InfoScreen() {
-  const userData = useUserData();
+  const userData = useUserDataDaysContext();
   const calorieIntakeArray = calculateCalories(userData);
   const proteinIntakeArray = calculateProtein(userData);
   // arrays of seven values each representing the sum of calories/protein for each day in the last week, ordered chronologically from oldest to most recent

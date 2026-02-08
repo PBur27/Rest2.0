@@ -7,7 +7,6 @@ export function calculateProtein(userData) {
     //dataDays are sorted chronologically
     let proteinSumDay = 0;
 
-    console.log("dataDay: ", dataDay.date, dataDay.diet);
     dataDay.diet.forEach((meal) => {
       proteinSumDay += meal.protein;
     });

@@ -7,7 +7,6 @@ export function calculateCalories(userData) {
     //dataDays are sorted chronologically
     let calorieSumDay = 0;
 
-    console.log("dataDay: ", dataDay.date, dataDay.diet);
     dataDay.diet.forEach((meal) => {
       calorieSumDay += meal.calories;
     });

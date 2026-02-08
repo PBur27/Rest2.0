@@ -1,4 +1,4 @@
-export function calculateExertion(days, exerciseMuscleData) {
+export async function calculateExertion(days, exerciseMuscleData) {
   const exertionTotal = {
     front: {
       head: 0,
@@ -36,7 +36,8 @@ export function calculateExertion(days, exerciseMuscleData) {
     for (const side in data) {
       for (const muscle in data[side]) {
         const val = data[side][muscle];
-        data[side][muscle] = val > 0.7 ? 3 : val > 0.4 ? 2 : val > 0.2 ? 1 : 0;
+        data[side][muscle] =
+          val >= 0.8 ? 3 : val >= 0.4 ? 2 : val >= 0.2 ? 1 : 0;
       }
     }
   };
@@ -54,7 +55,7 @@ export function calculateExertion(days, exerciseMuscleData) {
         (1 + Math.pow(100, -(protein === 0 ? 1.2 : protein / weight) + 1.6))) *
       0.125;
 
-    const recovery = -0.25 * 0.75 - sleepIndex - dietIndex;
+    const recovery = Math.max(-0.15 * 0.75 - sleepIndex - dietIndex, -0.33);
 
     for (const side in exertionTotal) {
       for (const muscle in exertionTotal[side]) {
@@ -86,6 +87,7 @@ export function calculateExertion(days, exerciseMuscleData) {
     }
   }
 
+  console.log("calculated exertion total:", exertionTotal);
   const displayValues = structuredClone(exertionTotal);
   formatValuesForDisplay(displayValues);
   return displayValues;

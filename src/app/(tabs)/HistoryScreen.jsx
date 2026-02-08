@@ -4,11 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../../components/TopBar";
 import HistoryDayEditModal from "../../components/history_screen/HistoryDayEditModal";
 import HistoryDays from "../../components/history_screen/HistoryDays";
-import { useUserData } from "../UserDataContext";
+import { useUserDataDaysContext } from "../UserDataContext";
 
 export default function HistoryScreen() {
   //userData from context
-  const userData = useUserData();
+  const userData = useUserDataDaysContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalData, setmodalData] = useState(null);
   const closeModal = () => {
