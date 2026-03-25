@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
 import { Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +15,8 @@ import {
 } from "./UserDataContext";
 
 export default function Index() {
+  const params = useLocalSearchParams();
+  const debugId = params?.debugId;
   const setUid = useSetUid();
   const setUserData = useSetUserDataDaysContext();
   const setExertionValues = useSetUserExertionContext();
@@ -23,8 +25,17 @@ export default function Index() {
   useEffect(() => {
     async function getUserData() {
       try {
-        const userId = await anonymousLogin();
-        setUid(userId);
+        let userId;
+
+        if (debugId != undefined) {
+          console.warn("ENTERING DEBUG MODE ", debugId);
+          userId = debugId;
+          setUid(userId);
+        } else {
+          userId = await anonymousLogin();
+          setUid(userId);
+          console.log("User Id: ", userId);
+        }
         const userData = await fetchUserData(userId);
         setUserData(userData);
         const exercisesData = await fetchExercisesData();

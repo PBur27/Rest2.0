@@ -1,4 +1,5 @@
-import { StyleSheet, View } from "react-native";
+import { router } from "expo-router";
+import { Button, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "../../components/CustomText";
 import TopBar from "../../components/TopBar";
@@ -6,11 +7,28 @@ import { useUser } from "../UserDataContext";
 
 export default function ProfileScreen() {
   const userId = useUser();
+
+  const enterDebugRedirect = () => {
+    router.replace({
+      pathname: "/",
+      params: {
+        debugId: "testId",
+      },
+    });
+  };
   return (
     <SafeAreaView style={styles.background} edges={["top"]}>
       <TopBar display={"Account"} />
       <View style={[styles.container, { flex: 13 }]}>
         <CustomText>User Id: {userId}</CustomText>
+        {userId == "testId" ? (
+          <CustomText>Test data - last week of March</CustomText>
+        ) : null}
+        <Button
+          title="enter debug mode"
+          color={"#8C7871"}
+          onPress={enterDebugRedirect}
+        ></Button>
       </View>
     </SafeAreaView>
   );

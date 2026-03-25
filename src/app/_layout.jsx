@@ -1,8 +1,8 @@
-import { Bayon_400Regular } from '@expo-google-fonts/bayon/400Regular';
-import { useFonts } from '@expo-google-fonts/bayon/useFonts';
+import { Bayon_400Regular } from "@expo-google-fonts/bayon/400Regular";
+import { useFonts } from "@expo-google-fonts/bayon/useFonts";
 import { Stack } from "expo-router";
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 import { UserDataProvider } from "./UserDataContext";
 
 SplashScreen.preventAutoHideAsync();
@@ -25,35 +25,21 @@ export default function RootLayout() {
     <UserDataProvider>
       <Stack
         screenOptions={{
-          headerShown: false
+          headerShown: false,
         }}
       >
         <Stack.Screen
           name="index"
           options={{
             headerShown: false,
-            animation: 'slide_from_right',
-          }}
-        />
-        <Stack.Screen
-          name="LoginScreen"
-          options={{
-            headerShown: false,
-            animation: 'slide_from_right',
-          }}
-        />
-        <Stack.Screen
-          name="RegisterScreen"
-          options={{
-            headerShown: false,
-            animation: 'slide_from_right',
+            animation: "slide_from_right",
           }}
         />
         <Stack.Screen
           name="(tabs)"
           options={{
             headerShown: false,
-            animation: 'slide_from_right',
+            animation: "slide_from_right",
           }}
         />
       </Stack>

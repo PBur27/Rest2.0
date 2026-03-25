@@ -1,4 +1,4 @@
-import { Button, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "../../components/CustomText";
 import { calculateCalories } from "../../components/info_screen/calculateCalories";
@@ -49,7 +49,7 @@ export default function InfoScreen() {
             fill={"red"}
           />
         </View>
-
+        {/*}
         <Button title="show user data" onPress={() => console.log(daysArray)} />
         <Button
           title="calculate calories and protein"
@@ -57,6 +57,7 @@ export default function InfoScreen() {
             console.log("c: ", calorieIntakeArray, "p: ", proteinIntakeArray)
           }
         />
+        {*/}
       </View>
     </SafeAreaView>
   );
@@ -75,6 +76,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     display: "flex",
+
     backgroundColor: "#FBF1E6",
     justifyContent: "space-around",
     alignItems: "center",
