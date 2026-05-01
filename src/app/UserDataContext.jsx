@@ -1,22 +1,27 @@
 import { createContext, useContext, useState } from "react";
 
+//Context for user data, most importantly user ID, but also pgysica
 export const UserDataContext = createContext();
 
+// 2. The Provider component that wraps your app (usually in _layout.tsx).
 export const UserDataProvider = ({ children }) => {
-  //stores userId
-  const [user, setUser] = useState(null);
-  //stores an array of days holding data regarding exercises, diet and sleep
+  // State: stores the current logged-in User ID or user object
+  const [userId, setUserId] = useState(null);
+
+  // State: stores history (diet, sleep, exercise) likely as an array of objects
   const [userDataDaysContext, setUserDataDaysContext] = useState(null);
-  //stores the exertion values for each muscle in the body
+
+  // State: stores current muscle fatigue/exertion levels
   const [userExertionContext, setUserExertionContext] = useState(null);
-  //stores data regarding exercises, fetched from database in key value pairs eg. {exercise: [...muscles], exercise: [...muscles], ... }
+
+  // State: stores the library of available exercises and their mapped muscle groups
   const [exercisesData, setExercisesData] = useState(null);
 
-  const setUid = (userData) => {
-    setUser(userData);
-  };
+  // Helper function to update the user state specifically
 
   return (
+    // 3. The Provider's 'value' prop broadcasts these variables and functions
+    // to every component nested inside it.
     <UserDataContext.Provider
       value={{
         user,
@@ -34,6 +39,11 @@ export const UserDataProvider = ({ children }) => {
   );
 };
 
+/**
+ * 4. Custom Hooks (Selectors)
+ * These make it easier to consume specific parts of the context without
+ * writing 'useContext(UserDataContext)' every time in your UI files.
+ */
 export const useUser = () => useContext(UserDataContext).user;
 export const useSetUid = () => useContext(UserDataContext).setUid;
 export const useUserDataDaysContext = () =>
